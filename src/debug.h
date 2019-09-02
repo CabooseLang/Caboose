@@ -1,4 +1,3 @@
-//> Chunks of Bytecode debug-h
 #ifndef caboose_debug_h
 #define caboose_debug_h
 
