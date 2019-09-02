@@ -1,5 +1,5 @@
 #ifndef _CABOOSE_VALUE_H_
-#define _CABOOSE_VALIE_H_ 
+#define _CABOOSE_VALUE_H_ 
 
 #include "common.h"
 

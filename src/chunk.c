@@ -22,10 +22,10 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
 	chunk->count++;
 }
 
-freeChunk(Chunk* chunk) {
+void freeChunk(Chunk* chunk) {
+freeValueArray(&chunk->constants);
 	FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
 	FREE_ARRAY(int, chunk->lines, chunk->capacity);
-	freeValueArray(&chunk->constants);
 	initChunk(chunk);
 }
 
