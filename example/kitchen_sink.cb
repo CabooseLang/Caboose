@@ -1,0 +1,12 @@
+print "You rock!";
+
+// Fibonacci implementation
+// >param {int} n The index of the Fibonacci sequence to get the number at.
+// >return {int} The number at the given index in the Fibonacci sequence
+fun fib(n) {
+    n = n + 1;
+    if (n < 2) return n;
+    return fib(n - 1) + fib(n - 2); 
+}
+
+print fib(6);
