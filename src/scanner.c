@@ -36,6 +36,7 @@ static char peekNext() {
 	if (isAtEnd()) return '\0';
 	return scanner.current[1];
 }
+
 static bool match(char expected) {
 	if (isAtEnd()) return false;
 	if (*scanner.current != expected) return false;
@@ -43,6 +44,7 @@ static bool match(char expected) {
 	scanner.current++;
 	return true;
 }
+
 static Token makeToken(TokenType type) {
 	Token token;
 	token.type = type;
@@ -89,8 +91,8 @@ static TokenType checkKeyword(int start, int length, const char* rest, TokenType
 
 	return TOKEN_IDENTIFIER;
 }
-static TokenType identifierType()
-{
+
+static TokenType identifierType() {
 	switch (scanner.start[0]) {
 		case 'a': return checkKeyword(1, 2, "nd", TOKEN_AND);
 		case 'c': return checkKeyword(1, 4, "lass", TOKEN_CLASS);
@@ -102,7 +104,12 @@ static TokenType identifierType()
 				case 'u': return checkKeyword(2, 1, "n", TOKEN_FUN);
 			}
 			break;
-		case 'i': return checkKeyword(1, 1, "f", TOKEN_IF);
+		case 'i':
+			if (scanner.current - scanner.start > 1) switch (scanner.start[1]) {
+				case 'f': return checkKeyword(2, 0, "", TOKEN_IF);
+				case 'm': return checkKeyword(2, 4, "port", TOKEN_IMPORT);
+			}
+			break;
 		case 'n': return checkKeyword(1, 2, "il", TOKEN_NIL);
 		case 'o': return checkKeyword(1, 1, "r", TOKEN_OR);
 		case 'p': return checkKeyword(1, 4, "rint", TOKEN_PRINT);

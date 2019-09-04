@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 
 #include "common.h"
 #include "compiler.h"
@@ -9,6 +10,7 @@
 #include "object.h"
 #include "memory.h"
 #include "vm.h"
+#include "util.h"
 
 VM vm; static Value clockNative(int argCount, Value* args) {
 	return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
@@ -418,6 +420,22 @@ static InterpretResult run() {
 				printValue(pop());
 				printf("\n");
 				break;
+			}
+			case OP_IMPORT: {
+				ObjString *fileName = AS_STRING(pop());
+				char *s = readFile(fileName->chars);
+
+				ObjFunction *function = compile(s);
+				if (function == NULL) return INTERPRET_COMPILE_ERROR;
+				push(OBJ_VAL(function));
+				ObjClosure *closure = newClosure(function);
+				pop();
+
+				frame = &vm.frames[vm.frameCount++];
+				frame->ip = closure->function->chunk.code;
+				frame->closure = closure;
+				frame->slots = vm.stackTop - 1;
+				free(s);
 			}
 			case OP_JUMP: {
 				uint16_t offset = READ_SHORT();
