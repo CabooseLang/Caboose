@@ -1,14 +1,15 @@
 # CabooseLang
 
 ## Building from source
-Clone the repository from git, and build:
+Clone the repository from git, and cd in:
 ```bash
 git clone git@git.railrunner16.me:RailRunner16/CabooseLang.git
 cd CabooseLang
-make
 ```
 
-To install it (on Linux):
+Build it with CMake:
 ```bash
-make install_linux
+cmake . -Bbuild -H.
+cmake --build ./build
 ```
+(This is also provided in [build.sh](build.sh))
