@@ -11,10 +11,10 @@
 #include "memory.h"
 #include "vm.h"
 #include "util.h"
+#include "natives.h"
 
-VM vm; static Value clockNative(int argCount, Value* args) {
-	return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
-}
+VM vm;
+
 static void resetStack() {
 	vm.stackTop = vm.stack;
 	vm.frameCount = 0;
@@ -43,14 +43,6 @@ static void runtimeError(const char* format, ...) {
 	resetStack();
 }
 
-static void defineNative(const char* name, NativeFn function) {
-	push(OBJ_VAL(copyString(name, (int)strlen(name))));
-	push(OBJ_VAL(newNative(function)));
-	tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
-	pop();
-	pop();
-}
-
 void initVM() {
 	resetStack();
 	vm.objects = NULL;
@@ -66,7 +58,7 @@ void initVM() {
 
 	vm.initString = copyString("init", 4);
 
-	defineNative("clock", clockNative);
+	defineAllNatives();
 }
 
 void freeVM() {
@@ -114,33 +106,33 @@ static bool callValue(Value callee, int argCount) {
 		switch (OBJ_TYPE(callee)) {
 			case OBJ_BOUND_METHOD: {
 				ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
-
-												vm.stackTop[-argCount - 1] = bound->receiver;
+				vm.stackTop[-argCount - 1] = bound->receiver;
 				return call(bound->method, argCount);
 			}
 			case OBJ_CLASS: {
 				ObjClass* klass = AS_CLASS(callee);
-
-								vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
-								Value initializer;
-				if (tableGet(&klass->methods, vm.initString, &initializer)) {
-					return call(AS_CLOSURE(initializer), argCount);
-				} else if (argCount != 0) {
+				vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
+				Value initializer;
+				
+				if (tableGet(&klass->methods, vm.initString, &initializer)) return call(AS_CLOSURE(initializer), argCount);
+				else if (argCount != 0) {
 					runtimeError("Expected 0 arguments but got %d.", argCount);
 					return false;
 				}
 
 				return true;
 			}
+
 			case OBJ_CLOSURE:
 				return call(AS_CLOSURE(callee), argCount);
 			case OBJ_NATIVE: {
-				NativeFn native = AS_NATIVE(callee);
-				Value result = native(argCount, vm.stackTop - argCount);
-				vm.stackTop -= argCount + 1;
-				push(result);
-				return true;
-			}
+                NativeFn native = AS_NATIVE(callee);
+                Value result = native(argCount, vm.stackTop - argCount);
+
+                vm.stackTop -= argCount + 1;
+                push(result);
+                return true;
+            }
 			default:
 				break;
 		}
