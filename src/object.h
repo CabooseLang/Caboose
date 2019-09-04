@@ -26,77 +26,74 @@
 #define AS_CSTRING(value)       (((ObjString*)AS_OBJ(value))->chars)
 
 typedef enum {
-  OBJ_BOUND_METHOD,
-  OBJ_CLASS,
-  OBJ_CLOSURE,
-  OBJ_FUNCTION,
-  OBJ_INSTANCE,
-  OBJ_NATIVE,
-  OBJ_STRING,
-  OBJ_UPVALUE
+	OBJ_BOUND_METHOD,
+	OBJ_CLASS,
+	OBJ_CLOSURE,
+	OBJ_FUNCTION,
+	OBJ_INSTANCE,
+	OBJ_NATIVE,
+	OBJ_STRING,
+	OBJ_UPVALUE
 } ObjType;
 
 struct sObj {
-  ObjType type;
-  bool isDark;
-  struct sObj* next;
+	ObjType type;
+	bool isDark;
+	struct sObj* next;
 };
 
 typedef struct {
-  Obj obj;
-  int arity;
-  int upvalueCount;
-  Chunk chunk;
-  ObjString* name;
+	Obj obj;
+	int arity;
+	int upvalueCount;
+	Chunk chunk;
+	ObjString* name;
 } ObjFunction;
 
 typedef Value (*NativeFn)(int argCount, Value* args);
 
 typedef struct {
-  Obj obj;
-  NativeFn function;
+	Obj obj;
+	NativeFn function;
 } ObjNative;
 
 struct sObjString {
-  Obj obj;
-  int length;
-  char* chars;
-  uint32_t hash;
+	Obj obj;
+	int length;
+	char* chars;
+	uint32_t hash;
 };
 
 typedef struct sUpvalue {
-  Obj obj;
-
-    Value* value;
-
-          Value closed;
-
-      struct sUpvalue* next;
+	Obj obj;
+	Value* value;
+	Value closed;
+	struct sUpvalue* next;
 } ObjUpvalue;
 
 typedef struct {
-  Obj obj;
-  ObjFunction* function;
-  ObjUpvalue** upvalues;
-  int upvalueCount;
+	Obj obj;
+	ObjFunction* function;
+	ObjUpvalue** upvalues;
+	int upvalueCount;
 } ObjClosure;
 
 typedef struct sObjClass {
-  Obj obj;
-  ObjString* name;
-  Table methods;
+	Obj obj;
+	ObjString* name;
+	Table methods;
 } ObjClass;
 
 typedef struct {
-  Obj obj;
-  ObjClass* klass;
-  Table fields;
+	Obj obj;
+	ObjClass* klass;
+	Table fields;
 } ObjInstance;
 
 typedef struct {
-  Obj obj;
-  Value receiver;
-  ObjClosure* method;
+	Obj obj;
+	Value receiver;
+	ObjClosure* method;
 } ObjBoundMethod;
 
 ObjBoundMethod* newBoundMethod(Value receiver, ObjClosure* method);
@@ -111,7 +108,7 @@ ObjString* copyString(const char* chars, int length);
 ObjUpvalue* newUpvalue(Value* slot);
 void printObject(Value value);
 static inline bool isObjType(Value value, ObjType type) {
-  return IS_OBJ(value) && AS_OBJ(value)->type == type;
+	return IS_OBJ(value) && AS_OBJ(value)->type == type;
 }
 
 #endif

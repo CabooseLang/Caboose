@@ -1,1 +1,1 @@
-import "./bool_equality.cb";
+import "./example/bool_equality.cb";

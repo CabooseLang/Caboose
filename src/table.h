@@ -5,17 +5,14 @@
 #include "value.h"
 
 typedef struct {
-  ObjString* key;
-  Value value;
+	ObjString* key;
+	Value value;
 } Entry;
 
 typedef struct {
-  int count;
-/* Hash Tables table-h < Optimization not-yet
-  int capacity;
-*/
-  int capacityMask;
-  Entry* entries;
+	int count;
+	int capacityMask;
+	Entry* entries;
 } Table;
 
 void initTable(Table* table);

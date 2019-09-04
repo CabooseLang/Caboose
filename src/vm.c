@@ -233,9 +233,11 @@ static void defineMethod(ObjString* name) {
 	pop();
 	pop();
 }
+
 static bool isFalsey(Value value) {
 	return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
+
 static void concatenate() {
 	ObjString* b = AS_STRING(peek(0));
 	ObjString* a = AS_STRING(peek(1));
@@ -251,6 +253,7 @@ static void concatenate() {
 	pop();
 	push(OBJ_VAL(result));
 }
+
 static InterpretResult run() {
 	CallFrame* frame = &vm.frames[vm.frameCount - 1];
 
@@ -279,15 +282,7 @@ static InterpretResult run() {
 			printf(" ]");
 		}
 		printf("\n");
-/* A Virtual Machine trace-execution < Calls and Functions trace-execution
-		disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
-*/
-/* Calls and Functions trace-execution < Closures not-yet
-		disassembleInstruction(&frame->function->chunk,
-				(int)(frame->ip - frame->function->chunk.code));
-*/
-		disassembleInstruction(&frame->closure->function->chunk,
-				(int)(frame->ip - frame->closure->function->chunk.code));
+		disassembleInstruction(&frame->closure->function->chunk, (int)(frame->ip - frame->closure->function->chunk.code));
 #endif
 		uint8_t instruction;
 		switch (instruction = READ_BYTE()) {
@@ -436,6 +431,7 @@ static InterpretResult run() {
 				frame->closure = closure;
 				frame->slots = vm.stackTop - 1;
 				free(s);
+				break;
 			}
 			case OP_JUMP: {
 				uint16_t offset = READ_SHORT();
