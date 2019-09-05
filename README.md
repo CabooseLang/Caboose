@@ -1,15 +1,6 @@
-# CabooseLang
+---
+description: 'Caboose is a simple, dynamically typed, bytecode based language written in C.'
+---
 
-## Building from source
-Clone the repository from git, and cd in:
-```bash
-git clone git@git.railrunner16.me:RailRunner16/CabooseLang.git
-cd CabooseLang
-```
+# Welcome to Caboose!
 
-Build it with CMake:
-```bash
-cmake . -Bbuild -H.
-cmake --build ./build
-```
-(This is also provided in [build.sh](build.sh))
