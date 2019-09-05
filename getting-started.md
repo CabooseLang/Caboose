@@ -8,19 +8,21 @@ description: Let's get started using caboose!
 
 Caboose is fairly new so we haven't had the time to package it for different OSes yet, therefore you will have to build it from source.
 
-```
-$ give me super-powers
+```bash
+$ git clone https://github.com/CabooseLang/Caboose.git
+$ cd Caboose
+$ bash build.sh # Uses CMake to build the executable
 ```
 
 {% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
+ Building requires the latest CMake on your system path.
 {% endhint %}
 
-Once you're strong enough, save the world:
+To run some Caboose code:
 
-```
-// Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
+```bash
+$ ./build/caboose # For the REPL
+$ ./build/caboose /path/to/your/code.cb # For a file
 ```
 
 
