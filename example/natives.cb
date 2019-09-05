@@ -1,3 +1,0 @@
-timeNum = time();
-
-print timeNum;

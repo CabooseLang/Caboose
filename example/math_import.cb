@@ -1,3 +1,0 @@
-import "./Math.cb";
-
-print math.fibonacci(5);

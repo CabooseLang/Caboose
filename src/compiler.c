@@ -602,6 +602,7 @@ static void block() {
 
 	consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
 }
+
 static void function(FunctionType type) {
 	Compiler compiler;
 	initCompiler(&compiler, type);
@@ -628,6 +629,7 @@ static void function(FunctionType type) {
 		emitByte(compiler.upvalues[i].index);
 	}
 }
+
 static void method() {
 	consume(TOKEN_IDENTIFIER, "Expect method name.");
 	uint8_t constant = identifierConstant(&parser.previous);
@@ -640,6 +642,7 @@ static void method() {
 
 	emitBytes(OP_METHOD, constant);
 }
+
 static void classDeclaration() {
 	consume(TOKEN_IDENTIFIER, "Expect class name.");
 	Token className = parser.previous;
@@ -658,15 +661,14 @@ static void classDeclaration() {
 	if (match(TOKEN_LESS)) {
 		consume(TOKEN_IDENTIFIER, "Expect superclass name.");
 
-		if (identifiersEqual(&className, &parser.previous)) {
+		if (identifiersEqual(&className, &parser.previous))
 			error("A class cannot inherit from itself.");
-		}
 
 		classCompiler.hasSuperclass = true;
 
 		beginScope();
-
-				variable(false);
+		
+		variable(false);
 		addLocal(syntheticToken("super"));
 		defineVariable(0);
 
@@ -681,9 +683,7 @@ static void classDeclaration() {
 	}
 	consume(TOKEN_RIGHT_BRACE, "Expect '}' after class body.");
 
-	if (classCompiler.hasSuperclass) {
-		endScope();
-	}
+	if (classCompiler.hasSuperclass) endScope();
 
 	currentClass = currentClass->enclosing;
 }

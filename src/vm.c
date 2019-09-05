@@ -11,15 +11,32 @@
 #include "memory.h"
 #include "vm.h"
 #include "util.h"
-#include "natives.h"
+// #include "natives.h"
 
 VM vm;
+
+static void defineNative(const char* name, NativeFn function) {
+    push(OBJ_VAL(copyString(name, (int) strlen(name))));
+    push(OBJ_VAL(newNative(function)));
+    tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+    pop();
+    pop();
+}
+
+static Value timeNative(int argCount, Value* args) {
+    return NUMBER_VAL((double) time(NULL));
+}
+
+static Value clockNative(int argCount, Value* args) {
+	return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+}
 
 static void resetStack() {
 	vm.stackTop = vm.stack;
 	vm.frameCount = 0;
 	vm.openUpvalues = NULL;
 }
+
 static void runtimeError(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
@@ -30,14 +47,10 @@ static void runtimeError(const char* format, ...) {
 	for (int i = vm.frameCount - 1; i >= 0; i--) {
 		CallFrame* frame = &vm.frames[i];
 		ObjFunction* function = frame->closure->function;
-						size_t instruction = frame->ip - function->chunk.code - 1;
-		fprintf(stderr, "[line %d] in ",
-						function->chunk.lines[instruction]);
-		if (function->name == NULL) {
-			fprintf(stderr, "script\n");
-		} else {
-			fprintf(stderr, "%s()\n", function->name->chars);
-		}
+		size_t instruction = frame->ip - function->chunk.code - 1;
+		fprintf(stderr, "[line %d] in ", function->chunk.lines[instruction]);
+		if (function->name == NULL) fprintf(stderr, "script\n");
+		else fprintf(stderr, "%s()\n", function->name->chars);
 	}
 
 	resetStack();
@@ -58,7 +71,7 @@ void initVM() {
 
 	vm.initString = copyString("init", 4);
 
-	defineAllNatives();
+	defineNative("clock", clockNative);
 }
 
 void freeVM() {
@@ -125,6 +138,8 @@ static bool callValue(Value callee, int argCount) {
 
 			case OBJ_CLOSURE:
 				return call(AS_CLOSURE(callee), argCount);
+			// case OBJ_FUNCTION:
+        	// 	return call(AS_FUNCTION(callee), argCount);
 			case OBJ_NATIVE: {
                 NativeFn native = AS_NATIVE(callee);
                 Value result = native(argCount, vm.stackTop - argCount);
@@ -142,8 +157,7 @@ static bool callValue(Value callee, int argCount) {
 	return false;
 }
 
-static bool invokeFromClass(ObjClass* klass, ObjString* name,
-														int argCount) {
+static bool invokeFromClass(ObjClass* klass, ObjString* name, int argCount) {
 		Value method;
 	if (!tableGet(&klass->methods, name, &method)) {
 		runtimeError("Undefined property '%s'.", name->chars);
@@ -442,9 +456,7 @@ static InterpretResult run() {
 			}
 			case OP_CALL: {
 				int argCount = READ_BYTE();
-				if (!callValue(peek(argCount), argCount)) {
-					return INTERPRET_RUNTIME_ERROR;
-				}
+				if (!callValue(peek(argCount), argCount)) return INTERPRET_RUNTIME_ERROR;
 				frame = &vm.frames[vm.frameCount - 1];
 				break;
 			}

@@ -1,6 +1,9 @@
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "natives.h"
 #include "vm.h"
-#include "time.h"
 
 static void defineNative(const char* name, NativeFn function) {
     push(OBJ_VAL(copyString(name, (int) strlen(name))));
@@ -32,10 +35,12 @@ void defineAllNatives() {
         "clock",
     };
 
-    NativeFn* nativeFunctions[] = {
+    NativeFn nativeFunctions[] = {
         timeNative,
         clockNative,
     };
 
-    for (uint8_t i = 0; i < sizeof(nativeNames) / sizeof(nativeNames[0]); ++i) defineNative(nativeNames[i], nativeFunctions[i]);
+    for (uint8_t i = 0; i < (sizeof(nativeNames) / sizeof(nativeNames[0])); ++i) {
+        defineNative(nativeNames[i], nativeFunctions[i]);
+    }
 }
