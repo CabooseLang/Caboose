@@ -18,6 +18,8 @@ VM vm;
 static void defineNative(const char* name, NativeFn function) {
     push(OBJ_VAL(copyString(name, (int) strlen(name))));
     push(OBJ_VAL(newNative(function)));
+	// printf("%s\n", AS_CSTRING(vm.stack[0]));
+	// printValue(vm.stack[1]);
     tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
     pop();
     pop();
@@ -463,9 +465,7 @@ static InterpretResult run() {
 			case OP_INVOKE: {
 				int argCount = READ_BYTE();
 				ObjString* method = READ_STRING();
-				if (!invoke(method, argCount)) {
-					return INTERPRET_RUNTIME_ERROR;
-				}
+				if (!invoke(method, argCount)) return INTERPRET_RUNTIME_ERROR;
 				frame = &vm.frames[vm.frameCount - 1];
 				break;
 			}
@@ -523,7 +523,8 @@ static InterpretResult run() {
 
 				ObjClass* subclass = AS_CLASS(peek(0));
 				tableAddAll(&AS_CLASS(superclass)->methods, &subclass->methods);
-				pop();         break;
+				pop();
+				break;
 			}
 			case OP_METHOD:
 				defineMethod(READ_STRING());

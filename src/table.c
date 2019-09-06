@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "memory.h"
 #include "object.h"
@@ -23,7 +24,7 @@ static Entry* findEntry(Entry* entries, int capacityMask, ObjString* key) {
 	uint32_t index = key->hash & capacityMask;
 	Entry* tombstone = NULL;
 	
-	while (true) {
+	for (;;) {
 		Entry* entry = &entries[index];
 
 		if (entry->key == NULL) {
@@ -34,11 +35,18 @@ static Entry* findEntry(Entry* entries, int capacityMask, ObjString* key) {
 		index = (index + 1) & capacityMask;
 	}
 }
+
 bool tableGet(Table* table, ObjString* key, Value* value) {
-	if (table->entries == NULL) return false;
+	if (table->entries == NULL) {
+		printf("empty table");
+		return false;
+	}
 
 	Entry* entry = findEntry(table->entries, table->capacityMask, key);
-	if (entry->key == NULL) return false;
+	if (entry->key == NULL) {
+		printf("empty key");
+		return false;
+	}
 
 	*value = entry->value;
 	return true;
@@ -67,6 +75,7 @@ static void adjustCapacity(Table* table, int capacityMask) {
 	table->entries = entries;
 	table->capacityMask = capacityMask;
 }
+
 bool tableSet(Table* table, ObjString* key, Value value) {
 	if (table->count + 1 > (table->capacityMask + 1) * TABLE_MAX_LOAD) {
 		int capacityMask = GROW_CAPACITY(table->capacityMask + 1) - 1;
@@ -94,12 +103,14 @@ bool tableDelete(Table* table, ObjString* key) {
 
 	return true;
 }
+
 void tableAddAll(Table* from, Table* to) {
 	for (int i = 0; i <= from->capacityMask; i++) {
 		Entry* entry = &from->entries[i];
 		if (entry->key != NULL) tableSet(to, entry->key, entry->value);
 	}
 }
+
 ObjString* tableFindString(Table* table, const char* chars, int length, uint32_t hash) {
 	if (table->entries == NULL) return NULL;
 	uint32_t index = hash & table->capacityMask;
