@@ -1,8 +1,9 @@
 #!/bin/sh
 
 set -ex
-cmake . -Bbuild -H.
-cmake --build ./build
 
 cd build
+cmake .. -B. -H..
+cmake --build .
+
 make package
