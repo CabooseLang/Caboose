@@ -1,10 +1,6 @@
 language: c
 dist: bionic
-addons:
-  apt:
-  - cmake
-  homebrew:
-  - cmake
+
 matrix:
   include:
   - os: linux
@@ -20,9 +16,9 @@ deploy:
     secure: BH84rwqabXQJIye5751cLbHihU1Cnnn2v51QwqmEqzT8G/sYcMztkrvC6wPNdhsfIh7FXCmFhQl7CS8TZd6s0UtHoZAFGVEu3EMDjrqjXw8g7n+/g7PkhK3eUW9xW4rF0eBRWsJEVJ/wjxLeTCWZizzG2yReX4t2XjFGV7ZsfxjiE8g6IitlgcLsBD9QvFeV0f1iFJd/I/CZHz7zFxymb6b1AIV1nwNftNEhFtDYPUV0Zz52rCdAqQWsGyB7Pw5anbrDaoBv/tEMj8j8kQisrE6H0g0AFwJrjs8TSIEKlw1tFPigKMwwS+/hGfTyneyqVm9ThUGUL5KWQTRke61RebIF1r1EJFoUU/f07AnDJ3Sm4U0uaVhot5ZHYPI8pC+eVF9HDFMGyYuvXre7VxD6Biz8f7aoPACrOdDd4VNspFP3YI4Bh5lfRdd+VPHJLgDU2FDjGV7JkN64+LlYiZ3i2UZNSVpR58a7J7hFs3TA9RGojnf3lIB56yx+Q12roB2IloNrLUYxYNjGnWXvhc8gMbaNLMRFg+suUPIcsWj3mJHqLuFWJQ7SV6fUD0WtoBlHiiIgxg24par3b0haEqS72nGEK3CCgMXO+8cFSMfLolehgodMtFnWP2faK7CNZTiEixvon4Bfo/zeANUNpN01IDdPX2Ey8PKmTZuqP3fh3w0=
   file_glob: true
   file: 
-  - *.deb
-  - *.dmg
+    - "build/**/*.deb"
+    - "build/**/*.dmg"
   draft: true
   on:
     repo: CabooseLang/Caboose
-    tag: true
+    tags: true
