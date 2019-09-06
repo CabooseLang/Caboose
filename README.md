@@ -1,5 +1,10 @@
 # CabooseLang
 
+**Links:**
+- [Docs](https://docs.caboose.ga)
+- [Website](https://caboose.ga)
+- [Discord](https://discord.gg/ZTVuFVF)
+
 ## Building from source
 Clone the repository from git, and cd in:
 ```bash
@@ -9,7 +14,5 @@ cd CabooseLang
 
 Build it with CMake:
 ```bash
-cmake . -Bbuild -H.
-cmake --build ./build
+bash ./build.sh # Runs CMake
 ```
-(This is also provided in [build.sh](build.sh))
