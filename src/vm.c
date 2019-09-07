@@ -20,7 +20,7 @@ static void defineNative(const char* name, NativeFn function) {
     push(OBJ_VAL(newNative(function)));
 	// printf("%s\n", AS_CSTRING(vm.stack[0]));
 	// printValue(vm.stack[1]);
-    tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+    printf("%d", tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]));
     pop();
     pop();
 }

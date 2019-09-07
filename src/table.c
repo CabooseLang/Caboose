@@ -28,9 +28,14 @@ static Entry* findEntry(Entry* entries, int capacityMask, ObjString* key) {
 		Entry* entry = &entries[index];
 
 		if (entry->key == NULL) {
-			if (IS_NIL(entry->value)) return tombstone != NULL ? tombstone : entry;
-			else if (tombstone == NULL) tombstone = entry;
-		} else if (entry->key == key) return entry;
+			if (IS_NIL(entry->value)) {
+			    return tombstone != NULL ? tombstone : entry;
+			} else if (tombstone == NULL) {
+			    tombstone = entry;
+			}
+		} else if (entry->key == key) {
+		    return entry;
+		}
 
 		index = (index + 1) & capacityMask;
 	}
@@ -43,10 +48,10 @@ bool tableGet(Table* table, ObjString* key, Value* value) {
 	}
 
 	Entry* entry = findEntry(table->entries, table->capacityMask, key);
-	if (entry->key == NULL) {
-		printf("empty key");
-		return false;
-	}
+//	if (entry->key == NULL) {
+//		printf("empty key");
+//		return false;
+//	}
 
 	*value = entry->value;
 	return true;
@@ -83,12 +88,11 @@ bool tableSet(Table* table, ObjString* key, Value value) {
 	}
 
 	Entry* entry = findEntry(table->entries, table->capacityMask, key);
-	
 	bool isNewKey = entry->key == NULL;
-	if (isNewKey && IS_NIL(entry->value)) table->count++;
-
 	entry->key = key;
 	entry->value = value;
+
+    if (isNewKey) table->count++;
 	return isNewKey;
 }
 
@@ -115,7 +119,7 @@ ObjString* tableFindString(Table* table, const char* chars, int length, uint32_t
 	if (table->entries == NULL) return NULL;
 	uint32_t index = hash & table->capacityMask;
 
-	while(true) {
+	for(;;) {
 		Entry* entry = &table->entries[index];
 
 		if (entry->key == NULL) if (IS_NIL(entry->value)) return NULL;

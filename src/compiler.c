@@ -698,11 +698,9 @@ static void funDeclaration() {
 static void varDeclaration() {
 	uint8_t global = parseVariable("Expect variable name.");
 
-	if (match(TOKEN_EQUAL)) {
-		expression();
-	} else {
-		emitByte(OP_NIL);
-	}
+	if (match(TOKEN_EQUAL)) expression();
+	else emitByte(OP_NIL);
+
 	consume(TOKEN_SEMICOLON, "Expect ';' after variable declaration.");
 
 	defineVariable(global);

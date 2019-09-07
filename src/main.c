@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 #include "common.h"
 #include "chunk.h"
@@ -8,7 +9,14 @@
 #include "vm.h"
 #include "util.h"
 
+static void sigintHandler(int sig) {
+    (void)sig;
+    printf("\nGoodbye.");
+    exit(0);
+}
+
 static void repl() {
+    signal(SIGINT, sigintHandler);
 	char line[1024];
 	while (true) {
 		printf("[>] ");
