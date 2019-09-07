@@ -19,6 +19,7 @@ deploy:
     - "build/**/*.deb"
     - "build/**/*.dmg"
   draft: true
+  skip_cleanup: true
   on:
     repo: CabooseLang/Caboose
     tags: true
