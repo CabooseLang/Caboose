@@ -18,6 +18,7 @@ deploy:
   file: 
     - "build/**/*.deb"
     - "build/**/*.dmg"
+    - "build/**/*.rpm"
   draft: true
   skip_cleanup: true
   on:
