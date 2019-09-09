@@ -16,7 +16,7 @@
 #include "files.h"
 #include "natives.h"
 
-VM vm; // [one]
+VM vm;
 
 void defineAllNatives();
 

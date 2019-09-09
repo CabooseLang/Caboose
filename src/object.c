@@ -145,7 +145,7 @@ ObjString *takeString(char *chars, int length) {
 char *removeBackslash(char *string, char c) {
     int write = 0, read = 0;
     while (string[read]) {
-        if (string[read] != c) string[write++] = string[read]
+        if (string[read] != c) string[write++] = string[read];
 
         read++;
     }
