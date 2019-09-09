@@ -78,14 +78,46 @@ static Value inputNative(int argCount, Value *args) {
     return l;
 }
 
-static bool printNative(int argCount, Value *args) {
+static bool printNative(int argCount, Value* args) {
     for (int i = 0; i < argCount; ++i) {
         Value value = args[i];
-        printValue(value);
-        printf("\n");
+
+        if(IS_STRING(value)) printf("%s", AS_CSTRING(value));
+        else printValue(value);
     }
 
     return true;
+}
+
+static bool printlnNative(int argCount, Value* args) {
+    for (int i = 0; i < argCount; ++i) {
+        Value value = args[i];
+
+        if(IS_STRING(value)) printf("%s\n", AS_CSTRING(value));
+        else {
+            printValue(value);
+            printf("\n");
+        }
+    }
+
+    return true;
+}
+
+static bool exitNative(int argCount, Value *args) {
+    if (argCount > 1) {
+        runtimeError("input() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (argCount != 0) {
+        Value exitCode = args[0];
+        if (!IS_NUMBER(exitCode)) {
+            runtimeError("exit() only takes a number argument");
+            return NIL_VAL;
+        }
+
+        exit((int)AS_NUMBER(exitCode));
+    }
 }
 
 void defineAllNatives() {
@@ -103,10 +135,14 @@ void defineAllNatives() {
 
     char* nativeVoidNames[] = {
         "print",
+        "println",
+        "exit",
     };
 
     NativeFnVoid nativeVoidFunctions[] = {
         printNative,
+        printlnNative,
+        exitNative,
     };
 
 

@@ -1,0 +1,7 @@
+var i = 1;
+    
+println(i++); // Postfix, prints 2
+println(++i); // Prefix, prints 2
+
+println(--i); // Prefix, prints 3
+println(i--); // Postfix, prints 2

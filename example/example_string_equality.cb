@@ -1,0 +1,5 @@
+var a = "string";
+
+println("hello" == "hello"); // Prints true
+println(a == a); // Prints true
+println("hello" == "world"); // Prints false

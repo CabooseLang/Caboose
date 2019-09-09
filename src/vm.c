@@ -621,11 +621,9 @@ static InterpretResult run() {
             }
             DISPATCH();
         }
-
         CASE_CODE(SUBTRACT):
             BINARY_OP(NUMBER_VAL, -);
             DISPATCH();
-
         CASE_CODE(INCREMENT): {
             if (!IS_NUMBER(peek(0))) {
                 runtimeError("Operand must be a number.");
@@ -635,7 +633,6 @@ static InterpretResult run() {
             push(NUMBER_VAL(AS_NUMBER(pop()) + 1));
             DISPATCH();
         }
-
         CASE_CODE(DECREMENT): {
             if (!IS_NUMBER(peek(0))) {
                 runtimeError("Operand must be a number.");
@@ -645,15 +642,12 @@ static InterpretResult run() {
             push(NUMBER_VAL(AS_NUMBER(pop()) - 1));
             DISPATCH();
         }
-
         CASE_CODE(MULTIPLY):
             BINARY_OP(NUMBER_VAL, *);
             DISPATCH();
-
         CASE_CODE(DIVIDE):
             BINARY_OP(NUMBER_VAL, /);
             DISPATCH();
-
         CASE_CODE(MOD): {
             double b = AS_NUMBER(pop());
             double a = AS_NUMBER(pop());
@@ -661,11 +655,9 @@ static InterpretResult run() {
             push(NUMBER_VAL(fmod(a, b)));
             DISPATCH();
         }
-
         CASE_CODE(NOT):
             push(BOOL_VAL(isFalsey(pop())));
             DISPATCH();
-
         CASE_CODE(NEGATE):
             if (!IS_NUMBER(peek(0))) {
                 runtimeError("Operand must be a number.");
@@ -674,30 +666,24 @@ static InterpretResult run() {
 
             push(NUMBER_VAL(-AS_NUMBER(pop())));
             DISPATCH();
-
         CASE_CODE(JUMP): {
             uint16_t offset = READ_SHORT();
             frame->ip += offset;
             DISPATCH();
         }
-
         CASE_CODE(JUMP_IF_FALSE): {
             uint16_t offset = READ_SHORT();
             if (isFalsey(peek(0))) frame->ip += offset;
             DISPATCH();
         }
-
         CASE_CODE(LOOP): {
             uint16_t offset = READ_SHORT();
             frame->ip -= offset;
             DISPATCH();
         }
-
         CASE_CODE(BREAK): {
-
             DISPATCH();
         }
-
         CASE_CODE(IMPORT): {
             ObjString *fileName = AS_STRING(pop());
             char *s = readFile(fileName->chars);
@@ -724,7 +710,6 @@ static InterpretResult run() {
             push(OBJ_VAL(list));
             DISPATCH();
         }
-
         CASE_CODE(ADD_LIST): {
             Value addValue = pop();
             Value listValue = pop();
@@ -735,13 +720,11 @@ static InterpretResult run() {
             push(OBJ_VAL(list));
             DISPATCH();
         }
-
         CASE_CODE(NEW_DICT): {
             ObjDict *dict = initDict();
             push(OBJ_VAL(dict));
             DISPATCH();
         }
-
         CASE_CODE(ADD_DICT): {
             Value value = pop();
             Value key = pop();
@@ -760,7 +743,6 @@ static InterpretResult run() {
             push(OBJ_VAL(dict));
             DISPATCH();
         }
-
         CASE_CODE(SUBSCRIPT): {
             Value indexValue = pop();
             Value listValue = pop();
@@ -773,9 +755,7 @@ static InterpretResult run() {
             ObjList *list = AS_LIST(listValue);
             int index = AS_NUMBER(indexValue);
 
-            if (index < 0)
-                index = list->values.count + index;
-
+            if (index < 0) index = list->values.count + index;
             if (index >= 0 && index < list->values.count) {
                 push(list->values.values[index]);
                 DISPATCH();
@@ -784,7 +764,6 @@ static InterpretResult run() {
             runtimeError("Array index out of bounds.");
             return INTERPRET_RUNTIME_ERROR;
         }
-
         CASE_CODE(SUBSCRIPT_ASSIGN): {
             Value assignValue = pop();
             Value indexValue = pop();
@@ -798,9 +777,7 @@ static InterpretResult run() {
             ObjList *list = AS_LIST(listValue);
             int index = AS_NUMBER(indexValue);
 
-            if (index < 0)
-                index = list->values.count + index;
-
+            if (index < 0) index = list->values.count + index;
             if (index >= 0 && index < list->values.count) {
                 list->values.values[index] = assignValue;
                 push(NIL_VAL);
@@ -812,7 +789,6 @@ static InterpretResult run() {
             runtimeError("Array index out of bounds.");
             return INTERPRET_RUNTIME_ERROR;
         }
-
         CASE_CODE(SUBSCRIPT_DICT): {
             Value indexValue = pop();
             Value dictValue = pop();
@@ -829,7 +805,6 @@ static InterpretResult run() {
 
             DISPATCH();
         }
-
         CASE_CODE(SUBSCRIPT_DICT_ASSIGN): {
             Value value = pop();
             Value key = pop();
@@ -848,7 +823,6 @@ static InterpretResult run() {
             push(NIL_VAL);
             DISPATCH();
         }
-
         CASE_CODE(CALL_0):
         CASE_CODE(CALL_1):
         CASE_CODE(CALL_2):
@@ -888,7 +862,6 @@ static InterpretResult run() {
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
-
         CASE_CODE(INVOKE_0):
         CASE_CODE(INVOKE_1):
         CASE_CODE(INVOKE_2):
@@ -929,7 +902,6 @@ static InterpretResult run() {
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
-
         CASE_CODE(SUPER_0):
         CASE_CODE(SUPER_1):
         CASE_CODE(SUPER_2):
@@ -971,7 +943,6 @@ static InterpretResult run() {
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
-
         CASE_CODE(CLOSURE): {
             ObjFunction *function = AS_FUNCTION(READ_CONSTANT());
 
@@ -993,16 +964,13 @@ static InterpretResult run() {
                     closure->upvalues[i] = frame->closure->upvalues[index];
                 }
             }
-
             DISPATCH();
         }
-
         CASE_CODE(CLOSE_UPVALUE): {
             closeUpvalues(vm.stackTop - 1);
             pop();
             DISPATCH();
         }
-
         CASE_CODE(RETURN): {
             Value result = pop();
 
@@ -1024,7 +992,6 @@ static InterpretResult run() {
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
-
         CASE_CODE(CLASS):
             createClass(READ_STRING(), NULL);
             DISPATCH();
@@ -1039,25 +1006,20 @@ static InterpretResult run() {
             createClass(READ_STRING(), AS_CLASS(superclass));
             DISPATCH();
         }
-
         CASE_CODE(METHOD):
             defineMethod(READ_STRING());
             DISPATCH();
-
         CASE_CODE(OPEN_FILE): {
             Value openType = pop();
             Value fileName = pop();
-
             if (!IS_STRING(openType)) {
                 runtimeError("File open type must be a string");
                 return INTERPRET_RUNTIME_ERROR;
             }
-
             if (!IS_STRING(fileName)) {
                 runtimeError("Filename must be a string");
                 return INTERPRET_RUNTIME_ERROR;
             }
-
             ObjString *openTypeString = AS_STRING(openType);
             ObjString *fileNameString = AS_STRING(fileName);
 
@@ -1075,7 +1037,6 @@ static InterpretResult run() {
             DISPATCH();
         }
     }
-    //}
 
 #undef READ_BYTE
 #undef READ_SHORT

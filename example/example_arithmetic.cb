@@ -1,9 +1,7 @@
-{
-    var a = 1;
-    var b = 2;
+var a = 1;
+var b = 2;
 
-    print a + b; // Addition, prints 3
-    print a - b; // Subtraction, prints -1
-    print a / b; // Division, prints 0.5
-    print a * b; // Division, prints 2
-}
+println(a + b); // Addition, prints 3
+println(a - b); // Subtraction, prints -1
+println(a / b); // Division, prints 0.5
+println(a * b); // Division, prints 2
