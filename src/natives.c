@@ -43,7 +43,7 @@ static Value inputNative(int argCount, Value* args) {
     if (argCount != 0) {
         Value prompt = args[0];
         if (!IS_STRING(prompt)) {
-            runtimeError("input() only takes a string argument");
+            runtimeError("input() only takes a string argument!");
             return NIL_VAL;
         }
 
@@ -56,7 +56,7 @@ static Value inputNative(int argCount, Value* args) {
     char *line = malloc(len_max);
 
     if (line == NULL) {
-        runtimeError("Memory error on input()!");
+        runtimeError("Memory error!");
         return NIL_VAL;
     }
 
@@ -113,7 +113,7 @@ static bool exitNative(int argCount, Value* args) {
     if (argCount != 0) {
         Value exitCode = args[0];
         if (!IS_NUMBER(exitCode)) {
-            runtimeError("exit() only takes a number argument");
+            runtimeError("exit() only takes a number argument!");
             return NIL_VAL;
         }
 
@@ -133,7 +133,7 @@ static Value floorNative(int argCount, Value* args) {
     }
 
     if (!IS_NUMBER(args[0])) {
-        runtimeError("floor() only accepts a number value!");
+        runtimeError("floor() only takes a number value!");
         return NIL_VAL;
     }
 
@@ -147,7 +147,7 @@ static Value ceilNative(int argCount, Value* args) {
     }
 
     if (!IS_NUMBER(args[0])) {
-        runtimeError("ceil() only accepts a number value!");
+        runtimeError("ceil() only takes a number value!");
         return NIL_VAL;
     }
 
