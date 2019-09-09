@@ -1,0 +1,3 @@
+with("./example_file_file.txt", "r") {
+    println(file.read());
+}
