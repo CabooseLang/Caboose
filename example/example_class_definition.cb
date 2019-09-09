@@ -1,0 +1,8 @@
+class SomeClass {
+    // Constructor
+    init() {
+        println("Object created!");
+    }
+}
+
+SomeClass(); // Prints "Object created!"

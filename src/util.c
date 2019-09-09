@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *readFile(const char *path) {
-    FILE *file = fopen(path, "rb");
+char* readFile(const char* path) {
+    FILE* file = fopen(path, "rb");
     if (file == NULL) {
         fprintf(stderr, "Could not open file \"%s\".\n", path);
         exit(74);
@@ -12,7 +12,7 @@ char *readFile(const char *path) {
     size_t fileSize = ftell(file);
     rewind(file);
 
-    char *buffer = (char *) malloc(fileSize + 1);
+    char* buffer = (char*) malloc(fileSize + 1);
     if (buffer == NULL) {
         fprintf(stderr, "Not enough memory to read \"%s\".\n", path);
         exit(74);

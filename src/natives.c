@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 #include "natives.h"
 #include "memory.h"
@@ -25,15 +26,15 @@ static void defineNativeVoid(const char *name, NativeFnVoid function) {
 }
 
 // Native functions
-static Value timeNative(int argCount, Value *args) {
+static Value timeNative(int argCount, Value* args) {
     return NUMBER_VAL((double) time(NULL));
 }
 
-static Value clockNative(int argCount, Value *args) {
+static Value clockNative(int argCount, Value* args) {
     return NUMBER_VAL((double) clock() / CLOCKS_PER_SEC);
 }
 
-static Value inputNative(int argCount, Value *args) {
+static Value inputNative(int argCount, Value* args) {
     if (argCount > 1) {
         runtimeError("input() takes exactly 1 argument (%d given).", argCount);
         return NIL_VAL;
@@ -103,7 +104,7 @@ static bool printlnNative(int argCount, Value* args) {
     return true;
 }
 
-static bool exitNative(int argCount, Value *args) {
+static bool exitNative(int argCount, Value* args) {
     if (argCount > 1) {
         runtimeError("input() takes exactly 1 argument (%d given).", argCount);
         return NIL_VAL;
@@ -120,17 +121,56 @@ static bool exitNative(int argCount, Value *args) {
     }
 }
 
+static Value randomNative(int argCount, Value* args) {
+    srand(time(NULL));
+    return NUMBER_VAL((double)rand() / (double)RAND_MAX);
+}
+
+static Value floorNative(int argCount, Value* args) {
+    if (argCount != 1) {
+        runtimeError("floor() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (!IS_NUMBER(args[0])) {
+        runtimeError("floor() only accepts a number value!");
+        return NIL_VAL;
+    }
+
+    return NUMBER_VAL(floor(AS_NUMBER(args[0])));
+}
+
+static Value ceilNative(int argCount, Value* args) {
+    if (argCount != 1) {
+        runtimeError("ceil() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (!IS_NUMBER(args[0])) {
+        runtimeError("ceil() only accepts a number value!");
+        return NIL_VAL;
+    }
+
+    return NUMBER_VAL(ceil(AS_NUMBER(args[0])));
+}
+
 void defineAllNatives() {
     char* nativeNames[] = {
         "clock",
         "time",
         "input",
+        "random",
+        "ceil",
+        "floor",
     };
 
     NativeFn nativeFunctions[] = {
         clockNative,
         timeNative,
         inputNative,
+        randomNative,
+        ceilNative,
+        floorNative,
     };
 
     char* nativeVoidNames[] = {
