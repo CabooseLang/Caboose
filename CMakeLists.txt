@@ -7,6 +7,7 @@ file(GLOB LIB_SOURCES "src/*.c")
 add_executable(caboose ${LIB_SOURCES})
 target_link_libraries(caboose m)
 install(TARGETS caboose DESTINATION bin)
+# install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/stdlib/ DESTINATION share/caboose/std)
 
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")

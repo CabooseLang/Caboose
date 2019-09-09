@@ -1,0 +1,7 @@
+class Random {
+    static int(min, max) {
+        min = ceil(min);
+        max = floor(max);
+        return floor(random() * (max - min + 1)) + min;
+    }
+}

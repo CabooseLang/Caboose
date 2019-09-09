@@ -4,7 +4,7 @@
 
 static bool splitString(int argCount) {
     if (argCount != 2) {
-        runtimeError("split() takes 2 arguments (%d  given)", argCount);
+        runtimeError("split() takes 2 arguments (%d given)", argCount);
         return false;
     }
 
@@ -39,7 +39,7 @@ static bool splitString(int argCount) {
 
 static bool containsString(int argCount) {
     if (argCount != 2) {
-        runtimeError("contains() takes 2 arguments (%d  given)", argCount);
+        runtimeError("contains() takes 2 arguments (%d given)", argCount);
         return false;
     }
 
@@ -67,7 +67,7 @@ static bool containsString(int argCount) {
 
 static bool findString(int argCount) {
     if (argCount < 2 || argCount > 3) {
-        runtimeError("find() takes either 2 or 3 arguments (%d  given)", argCount);
+        runtimeError("find() takes either 2 or 3 arguments (%d given)", argCount);
         return false;
     }
 

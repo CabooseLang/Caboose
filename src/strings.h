@@ -6,6 +6,6 @@
 #include <string.h>
 #include <ctype.h>
 
-bool stringMethods(char *method, int argCount);
+bool stringMethods(char* method, int argCount);
 
 #endif

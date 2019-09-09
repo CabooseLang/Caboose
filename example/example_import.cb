@@ -1,0 +1,3 @@
+import "./example_imported_file.cb";
+
+println(add(1, 2));

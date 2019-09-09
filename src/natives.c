@@ -154,6 +154,15 @@ static Value ceilNative(int argCount, Value* args) {
     return NUMBER_VAL(ceil(AS_NUMBER(args[0])));
 }
 
+static Value boolNative(int argCount, Value *args) {
+    if (argCount != 1) {
+        runtimeError("bool() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    return BOOL_VAL(!isFalsey(args[0]));
+}
+
 void defineAllNatives() {
     char* nativeNames[] = {
         "clock",
@@ -162,6 +171,7 @@ void defineAllNatives() {
         "random",
         "ceil",
         "floor",
+        "bool",
     };
 
     NativeFn nativeFunctions[] = {
@@ -171,6 +181,7 @@ void defineAllNatives() {
         randomNative,
         ceilNative,
         floorNative,
+        boolNative,
     };
 
     char* nativeVoidNames[] = {
