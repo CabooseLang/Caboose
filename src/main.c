@@ -16,7 +16,7 @@ static void sigintHandler(int sig) {
 }
 
 static void repl() {
-    printf("Caboose Prompt");
+    printf("Caboose Prompt\n");
     signal(SIGINT, sigintHandler);
     char line[1024];
     while (true) {
