@@ -154,13 +154,30 @@ static Value ceilNative(int argCount, Value* args) {
     return NUMBER_VAL(ceil(AS_NUMBER(args[0])));
 }
 
-static Value boolNative(int argCount, Value *args) {
+static Value boolNative(int argCount, Value* args) {
     if (argCount != 1) {
         runtimeError("bool() takes exactly 1 argument (%d given).", argCount);
         return NIL_VAL;
     }
 
     return BOOL_VAL(!isFalsey(args[0]));
+}
+
+static Value numNative(int argCount, Value* args) {
+    if (argCount != 1) {
+        runtimeError("number() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (!IS_STRING(args[0])) {
+        runtimeError("number() only takes a string as an argument");
+        return NIL_VAL;
+    }
+
+    char *numberString = AS_CSTRING(args[0]);
+    double number = strtod(numberString, NULL);
+
+    return NUMBER_VAL(number);
 }
 
 void defineAllNatives() {
@@ -172,6 +189,7 @@ void defineAllNatives() {
         "ceil",
         "floor",
         "bool",
+        "num",
     };
 
     NativeFn nativeFunctions[] = {
@@ -182,6 +200,7 @@ void defineAllNatives() {
         ceilNative,
         floorNative,
         boolNative,
+        numNative,
     };
 
     char* nativeVoidNames[] = {
@@ -197,6 +216,9 @@ void defineAllNatives() {
     };
 
 
-    for (uint8_t i = 0; i < sizeof(nativeNames) / sizeof(nativeNames[0]); ++i) defineNative(nativeNames[i], nativeFunctions[i]);
-    for (uint8_t i = 0; i < sizeof(nativeVoidNames) / sizeof(nativeVoidNames[0]); ++i) defineNativeVoid(nativeVoidNames[i], nativeVoidFunctions[i]);
+    for (uint8_t i = 0; i < sizeof(nativeNames) / sizeof(nativeNames[0]); ++i)
+        defineNative(nativeNames[i], nativeFunctions[i]);
+    
+    for (uint8_t i = 0; i < sizeof(nativeVoidNames) / sizeof(nativeVoidNames[0]); ++i)
+        defineNativeVoid(nativeVoidNames[i], nativeVoidFunctions[i]);
 }
