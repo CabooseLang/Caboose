@@ -180,6 +180,24 @@ static Value numNative(int argCount, Value* args) {
     return NUMBER_VAL(number);
 }
 
+static Value strNative(int argCount, Value* args) {
+    if (argCount != 1) {
+        runtimeError("str() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (!IS_STRING(args[0])) {
+        char *valueString = valueToString(args[0]);
+
+        ObjString *string = copyString(valueString, strlen(valueString));
+        free(valueString);
+
+        return OBJ_VAL(string);
+    }
+
+    return args[0];
+}
+
 void defineAllNatives() {
     char* nativeNames[] = {
         "clock",
@@ -190,6 +208,7 @@ void defineAllNatives() {
         "floor",
         "bool",
         "num",
+        "str",
     };
 
     NativeFn nativeFunctions[] = {
@@ -201,6 +220,7 @@ void defineAllNatives() {
         floorNative,
         boolNative,
         numNative,
+        strNative,
     };
 
     char* nativeVoidNames[] = {
