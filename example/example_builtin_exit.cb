@@ -1,2 +1,1 @@
-println("Exiting with code 0...");
 exit(0);

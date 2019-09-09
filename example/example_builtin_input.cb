@@ -1,0 +1,2 @@
+var input = input("enter a test string: ");
+println(input);
