@@ -121,7 +121,7 @@ static bool callValue(Value callee, int argCount) {
     if (IS_OBJ(callee)) {
         switch (OBJ_TYPE(callee)) {
             case OBJ_BOUND_METHOD: {
-                ObjBoundMethod *bound = AS_BOUND_METHOD(callee);
+                ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
 
                 // Replace the bound method with the receiver so it's in the
                 // right slot when the method is called.
@@ -160,8 +160,7 @@ static bool callValue(Value callee, int argCount) {
                 NativeFn native = AS_NATIVE(callee);
                 Value result = native(argCount, vm.stackTop - argCount);
 
-                if (IS_NIL(result))
-                    return false;
+                if (IS_NIL(result)) return false;
 
                 vm.stackTop -= argCount + 1;
                 vm.stackCount -= argCount + 1;
@@ -178,7 +177,7 @@ static bool callValue(Value callee, int argCount) {
     return false;
 }
 
-static bool invokeFromClass(ObjClass *klass, ObjString *name,
+static bool invokeFromClass(ObjClass* klass, ObjString *name,
                             int argCount) {
     // Look for the method.
     Value method;
@@ -190,11 +189,11 @@ static bool invokeFromClass(ObjClass *klass, ObjString *name,
     return call(AS_CLOSURE(method), argCount);
 }
 
-static bool invoke(ObjString *name, int argCount) {
+static bool invoke(ObjString* name, int argCount) {
     Value receiver = peek(argCount);
 
     if (IS_CLASS(receiver)) {
-        ObjClass *instance = AS_CLASS(receiver);
+        ObjClass* instance = AS_CLASS(receiver);
         Value method;
         if (!tableGet(&instance->methods, name, &method)) {
             runtimeError("Undefined property '%s'.", name->chars);
@@ -364,8 +363,8 @@ static InterpretResult run() {
         #undef OPCODE
     };
 
-    #define INTERPRET_LOOP    DISPATCH();
-    #define CASE_CODE(name)   op_##name
+    #define INTERPRET_LOOP DISPATCH();
+    #define CASE_CODE(name) op_##name
 
     #define DISPATCH() \
         do { \
@@ -415,7 +414,7 @@ static InterpretResult run() {
         }
         CASE_CODE(POP): {
             if (IS_FILE(peek(0))) {
-                ObjFile *file = AS_FILE(peek(0));
+                ObjFile* file = AS_FILE(peek(0));
                 fclose(file->file);
                 collectGarbage();
             }
@@ -434,7 +433,7 @@ static InterpretResult run() {
             DISPATCH();
         }
         CASE_CODE(GET_GLOBAL): {
-            ObjString *name = READ_STRING();
+            ObjString* name = READ_STRING();
             Value value;
             if (!tableGet(&vm.globals, name, &value)) {
                 runtimeError("Undefined variable '%s'.", name->chars);
@@ -444,13 +443,13 @@ static InterpretResult run() {
             DISPATCH();
         }
         CASE_CODE(DEFINE_GLOBAL): {
-            ObjString *name = READ_STRING();
+            ObjString* name = READ_STRING();
             tableSet(&vm.globals, name, peek(0));
             pop();
             DISPATCH();
         }
         CASE_CODE(SET_GLOBAL): {
-            ObjString *name = READ_STRING();
+            ObjString* name = READ_STRING();
             if (tableSet(&vm.globals, name, peek(0))) {
                 runtimeError("Undefined variable '%s'.", name->chars);
                 return INTERPRET_RUNTIME_ERROR;
@@ -473,8 +472,8 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjInstance *instance = AS_INSTANCE(peek(0));
-            ObjString *name = READ_STRING();
+            ObjInstance* instance = AS_INSTANCE(peek(0));
+            ObjString* name = READ_STRING();
             Value value;
             if (tableGet(&instance->fields, name, &value)) {
                 pop(); // Instance.
@@ -492,8 +491,8 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjInstance *instance = AS_INSTANCE(peek(0));
-            ObjString *name = READ_STRING();
+            ObjInstance* instance = AS_INSTANCE(peek(0));
+            ObjString* name = READ_STRING();
             Value value;
             if (tableGet(&instance->fields, name, &value)) {
                 push(value);
@@ -510,7 +509,7 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjInstance *instance = AS_INSTANCE(peek(1));
+            ObjInstance* instance = AS_INSTANCE(peek(1));
             tableSet(&instance->fields, READ_STRING(), peek(0));
             pop();
             pop();
@@ -518,11 +517,10 @@ static InterpretResult run() {
             DISPATCH();
         }
         CASE_CODE(GET_SUPER): {
-            ObjString *name = READ_STRING();
-            ObjClass *superclass = AS_CLASS(pop());
-            if (!bindMethod(superclass, name)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+            ObjString* name = READ_STRING();
+            ObjClass* superclass = AS_CLASS(pop());
+
+            if (!bindMethod(superclass, name)) return INTERPRET_RUNTIME_ERROR;
             DISPATCH();
         }
         CASE_CODE(EQUAL): {
@@ -547,8 +545,8 @@ static InterpretResult run() {
                 Value listToAddValue = pop();
                 Value listValue = pop();
 
-                ObjList *list = AS_LIST(listValue);
-                ObjList *listToAdd = AS_LIST(listToAddValue);
+                ObjList* list = AS_LIST(listValue);
+                ObjList* listToAdd = AS_LIST(listToAddValue);
 
                 for (int i = 0; i < listToAdd->values.count; ++i) writeValueArray(&list->values, listToAdd->values.values[i]);
 
@@ -623,14 +621,14 @@ static InterpretResult run() {
             DISPATCH();
         }
         CASE_CODE(IMPORT): {
-            ObjString *fileName = AS_STRING(pop());
-            char *s = readFile(fileName->chars);
+            ObjString* fileName = AS_STRING(pop());
+            char* s = readFile(fileName->chars);
             vm.currentScriptName = fileName->chars;
 
-            ObjFunction *function = compile(s);
+            ObjFunction* function = compile(s);
             if (function == NULL) return INTERPRET_COMPILE_ERROR;
             push(OBJ_VAL(function));
-            ObjClosure *closure = newClosure(function);
+            ObjClosure* closure = newClosure(function);
             pop();
 
             vm.currentFrameCount = vm.frameCount;
@@ -644,7 +642,7 @@ static InterpretResult run() {
         }
 
         CASE_CODE(NEW_LIST): {
-            ObjList *list = initList();
+            ObjList* list = initList();
             push(OBJ_VAL(list));
             DISPATCH();
         }
@@ -652,14 +650,14 @@ static InterpretResult run() {
             Value addValue = pop();
             Value listValue = pop();
 
-            ObjList *list = AS_LIST(listValue);
+            ObjList* list = AS_LIST(listValue);
             writeValueArray(&list->values, addValue);
 
             push(OBJ_VAL(list));
             DISPATCH();
         }
         CASE_CODE(NEW_DICT): {
-            ObjDict *dict = initDict();
+            ObjDict* dict = initDict();
             push(OBJ_VAL(dict));
             DISPATCH();
         }
@@ -673,8 +671,8 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjDict *dict = AS_DICT(dictValue);
-            char *keyString = AS_CSTRING(key);
+            ObjDict* dict = AS_DICT(dictValue);
+            char* keyString = AS_CSTRING(key);
 
             insertDict(dict, keyString, value);
 
@@ -690,7 +688,7 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjList *list = AS_LIST(listValue);
+            ObjList* list = AS_LIST(listValue);
             int index = AS_NUMBER(indexValue);
 
             if (index < 0) index = list->values.count + index;
@@ -712,7 +710,7 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjList *list = AS_LIST(listValue);
+            ObjList* list = AS_LIST(listValue);
             int index = AS_NUMBER(indexValue);
 
             if (index < 0) index = list->values.count + index;
@@ -736,8 +734,8 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjDict *dict = AS_DICT(dictValue);
-            char *key = AS_CSTRING(indexValue);
+            ObjDict* dict = AS_DICT(dictValue);
+            char* key = AS_CSTRING(indexValue);
 
             push(searchDict(dict, key));
 
@@ -753,8 +751,8 @@ static InterpretResult run() {
                 return INTERPRET_RUNTIME_ERROR;
             }
 
-            ObjDict *dict = AS_DICT(dictValue);
-            char *keyString = AS_CSTRING(key);
+            ObjDict* dict = AS_DICT(dictValue);
+            char* keyString = AS_CSTRING(key);
 
             insertDict(dict, keyString, value);
 
@@ -794,9 +792,9 @@ static InterpretResult run() {
         CASE_CODE(CALL_30):
         CASE_CODE(CALL_31): {
             int argCount = instruction - OP_CALL_0;
-            if (!callValue(peek(argCount), argCount)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+
+            if (!callValue(peek(argCount), argCount)) return INTERPRET_RUNTIME_ERROR;
+            
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
@@ -832,11 +830,11 @@ static InterpretResult run() {
         CASE_CODE(INVOKE_29):
         CASE_CODE(INVOKE_30):
         CASE_CODE(INVOKE_31): {
-            ObjString *method = READ_STRING();
+            ObjString* method = READ_STRING();
             int argCount = instruction - OP_INVOKE_0;
-            if (!invoke(method, argCount)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+            
+            if (!invoke(method, argCount)) return INTERPRET_RUNTIME_ERROR;
+
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
@@ -872,21 +870,21 @@ static InterpretResult run() {
         CASE_CODE(SUPER_29):
         CASE_CODE(SUPER_30):
         CASE_CODE(SUPER_31): {
-            ObjString *method = READ_STRING();
+            ObjString* method = READ_STRING();
             int argCount = instruction - OP_SUPER_0;
-            ObjClass *superclass = AS_CLASS(pop());
-            if (!invokeFromClass(superclass, method, argCount)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+            ObjClass* superclass = AS_CLASS(pop());
+
+            if (!invokeFromClass(superclass, method, argCount)) return INTERPRET_RUNTIME_ERROR;
+            
             frame = &vm.frames[vm.frameCount - 1];
             DISPATCH();
         }
         CASE_CODE(CLOSURE): {
-            ObjFunction *function = AS_FUNCTION(READ_CONSTANT());
+            ObjFunction* function = AS_FUNCTION(READ_CONSTANT());
 
             // Create the closure and push it on the stack before creating
             // upvalues so that it doesn't get collected.
-            ObjClosure *closure = newClosure(function);
+            ObjClosure* closure = newClosure(function);
             push(OBJ_VAL(closure));
 
             // Capture upvalues.
@@ -950,18 +948,21 @@ static InterpretResult run() {
         CASE_CODE(OPEN_FILE): {
             Value openType = pop();
             Value fileName = pop();
+            
             if (!IS_STRING(openType)) {
                 runtimeError("File open type must be a string");
                 return INTERPRET_RUNTIME_ERROR;
             }
+            
             if (!IS_STRING(fileName)) {
                 runtimeError("Filename must be a string");
                 return INTERPRET_RUNTIME_ERROR;
             }
-            ObjString *openTypeString = AS_STRING(openType);
-            ObjString *fileNameString = AS_STRING(fileName);
 
-            ObjFile *file = initFile();
+            ObjString* openTypeString = AS_STRING(openType);
+            ObjString* fileNameString = AS_STRING(fileName);
+
+            ObjFile* file = initFile();
             file->file = fopen(fileNameString->chars, openTypeString->chars);
             file->path = fileNameString->chars;
             file->openType = openTypeString->chars;
@@ -986,11 +987,11 @@ static InterpretResult run() {
 
 }
 
-InterpretResult interpret(const char *source) {
-    ObjFunction *function = compile(source);
+InterpretResult interpret(const char* source) {
+    ObjFunction* function = compile(source);
     if (function == NULL) return INTERPRET_COMPILE_ERROR;
     push(OBJ_VAL(function));
-    ObjClosure *closure = newClosure(function);
+    ObjClosure* closure = newClosure(function);
     pop();
     callValue(OBJ_VAL(closure), 0);
     InterpretResult result = run();
