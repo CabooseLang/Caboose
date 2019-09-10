@@ -119,7 +119,7 @@ void resizeDict(ObjDict *dict, bool grow) {
     if (grow) newSize = dict->capacity << 1; // Grow by a factor of 2
     else newSize = dict->capacity >> 1; // Shrink by a factor of 2
 
-    dictItem **items = calloc(newSize, sizeof(*dict->items));
+    dictItem** items = calloc(newSize, sizeof(*dict->items));
 
     for (int j = 0; j < dict->capacity; ++j) {
         if (!dict->items[j]) continue;
@@ -165,20 +165,20 @@ Value searchDict(ObjDict *dict, char *key) {
 }
 
 // Calling function needs to free memory
-char *valueToString(Value value) {
+char* valueToString(Value value) {
     if (IS_BOOL(value)) {
-        char *str = AS_BOOL(value) ? "true" : "false";
-        char *boolString = malloc(sizeof(char) * (strlen(str) + 1));
+        char* str = AS_BOOL(value) ? "true" : "false";
+        char* boolString = malloc(sizeof(char) * (strlen(str) + 1));
         snprintf(boolString, strlen(str) + 1, "%s", str);
         return boolString;
     } else if (IS_NIL(value)) {
-        char *nilString = malloc(sizeof(char) * 4);
+        char* nilString = malloc(sizeof(char) * 4);
         snprintf(nilString, 4, "%s", "nil");
         return nilString;
     } else if (IS_NUMBER(value)) {
         double number = AS_NUMBER(value);
         int numberStringLength = snprintf(NULL, 0, "%.15g", number) + 1;
-        char *numberString = malloc(sizeof(char) * numberStringLength);
+        char* numberString = malloc(sizeof(char) * numberStringLength);
         snprintf(numberString, numberStringLength, "%.15g", number);
         return numberString;
     } else if (IS_OBJ(value)) {

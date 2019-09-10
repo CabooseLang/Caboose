@@ -187,7 +187,7 @@ static Value strNative(int argCount, Value* args) {
     }
 
     if (!IS_STRING(args[0])) {
-        char *valueString = valueToString(args[0]);
+        char* valueString = valueToString(args[0]);
 
         ObjString *string = copyString(valueString, strlen(valueString));
         free(valueString);
@@ -196,6 +196,18 @@ static Value strNative(int argCount, Value* args) {
     }
 
     return args[0];
+}
+
+static Value powNative(int argCount, Value* args) {
+    if (argCount != 2) {
+        runtimeError("pow() takes exactly 2 arguments. (%d given)", argCount);
+        return NIL_VAL;
+    }
+
+    int a = AS_NUMBER(args[0]);
+    int b = AS_NUMBER(args[1]);
+
+    return NUMBER_VAL(pow(a, b));
 }
 
 void defineAllNatives() {
@@ -209,6 +221,7 @@ void defineAllNatives() {
         "bool",
         "num",
         "str",
+        "pow",
     };
 
     NativeFn nativeFunctions[] = {
@@ -221,6 +234,7 @@ void defineAllNatives() {
         boolNative,
         numNative,
         strNative,
+        powNative,
     };
 
     char* nativeVoidNames[] = {
