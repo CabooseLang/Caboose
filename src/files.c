@@ -131,7 +131,7 @@ static bool seekFile(int argCount) {
     return true;
 }
 
-bool fileMethods(char *method, int argCount) {
+bool fileMethods(char* method, int argCount) {
     if (strcmp(method, "write") == 0) return writeFile(argCount, false);
     else if (strcmp(method, "writeLine") == 0) return writeFile(argCount, true);
     else if (strcmp(method, "read") == 0) return readFile(argCount);

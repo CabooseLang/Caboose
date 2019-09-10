@@ -115,12 +115,9 @@ static void skipWhitespace() {
     }
 }
 
-static TokenType checkKeyword(int start, int length,
-                              const char *rest, TokenType type) {
-    if (scanner.current - scanner.start == start + length &&
-        memcmp(scanner.start + start, rest, length) == 0) {
+static TokenType checkKeyword(int start, int length, const char *rest, TokenType type) {
+    if (scanner.current - scanner.start == start + length && memcmp(scanner.start + start, rest, length) == 0)
         return type;
-    }
 
     return TOKEN_IDENTIFIER;
 }
@@ -272,11 +269,8 @@ Token scanToken() {
         case '.':
             return makeToken(TOKEN_DOT);
         case '/': {
-            if (match('=')) {
-                return makeToken(TOKEN_DIVIDE_EQUALS);
-            } else {
-                return makeToken(TOKEN_SLASH);
-            }
+            if (match('=')) return makeToken(TOKEN_DIVIDE_EQUALS);
+            else return makeToken(TOKEN_SLASH);
         }
         case '*': {
             if (match('=')) return makeToken(TOKEN_MULTIPLY_EQUALS);

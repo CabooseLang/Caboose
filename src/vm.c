@@ -136,9 +136,9 @@ static bool callValue(Value callee, int argCount) {
 
                 // Call the initializer, if there is one.
                 Value initializer;
-                if (tableGet(&klass->methods, vm.initString, &initializer)) {
+                if (tableGet(&klass->methods, vm.initString, &initializer)) 
                     return call(AS_CLOSURE(initializer), argCount);
-                } else if (argCount != 0) {
+                else if (argCount != 0) {
                     runtimeError("Expected 0 arguments but got %d.", argCount);
                     return false;
                 }
@@ -482,9 +482,7 @@ static InterpretResult run() {
                 DISPATCH();
             }
 
-            if (!bindMethod(instance->klass, name)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+            if (!bindMethod(instance->klass, name)) return INTERPRET_RUNTIME_ERROR;
 
             DISPATCH();
         }
@@ -502,9 +500,7 @@ static InterpretResult run() {
                 DISPATCH();
             }
 
-            if (!bindMethod(instance->klass, name)) {
-                return INTERPRET_RUNTIME_ERROR;
-            }
+            if (!bindMethod(instance->klass, name)) return INTERPRET_RUNTIME_ERROR;
 
             DISPATCH();
         }
