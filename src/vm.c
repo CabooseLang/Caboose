@@ -318,12 +318,12 @@ static void concatenate() {
     ObjString *a = AS_STRING(peek(1));
 
     int length = a->length + b->length;
-    char *chars = ALLOCATE(char, length + 1);
+    char* chars = ALLOCATE(char, length + 1);
     memcpy(chars, a->chars, a->length);
     memcpy(chars + a->length, b->chars, b->length);
     chars[length] = '\0';
 
-    ObjString *result = takeString(chars, length);
+    ObjString* result = takeString(chars, length);
 
     pop();
     pop();
@@ -337,7 +337,7 @@ static void setReplVar(Value value) {
 
 static InterpretResult run() {
 
-    CallFrame *frame = &vm.frames[vm.frameCount - 1];
+    CallFrame* frame = &vm.frames[vm.frameCount - 1];
 
     #define READ_BYTE() (*frame->ip++)
     #define READ_SHORT() (frame->ip += 2, (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
@@ -385,8 +385,7 @@ static InterpretResult run() {
     #endif
 
     uint8_t instruction;
-    INTERPRET_LOOP
-    {
+    INTERPRET_LOOP {
         CASE_CODE(CONSTANT): {
             Value constant = READ_CONSTANT();
             push(constant);
