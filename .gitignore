@@ -109,3 +109,4 @@ fabric.properties
 
 caboose
 build/
+.caboose_history.cb

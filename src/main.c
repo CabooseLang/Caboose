@@ -1,3 +1,5 @@
+#define USE_UTF8
+
 #include "chunk.h"
 #include "common.h"
 #include "debug.h"
@@ -18,16 +20,15 @@ static void sigintHandler(int sig) {
 static void repl() {
 	printf("Caboose Prompt\n");
 	signal(SIGINT, sigintHandler);
-	char line[1024];
-	while (true) {
-		printf("[>>] ");
 
-		if (!fgets(line, sizeof(line), stdin)) {
-			printf("\n");
-			break;
-		}
-
+    linenoiseHistoryLoad(".caboose_history.cb");
+	
+    char *line;
+	while ((line = linenoise("[>>] ")) != NULL) {
 		interpret(line);
+
+        linenoiseHistoryAdd(line);
+        linenoiseHistorySave(".caboose_history.cb");
 	}
 }
 
