@@ -1,8 +1,8 @@
+#include <assert.h>
+#include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <assert.h>
 
 #ifndef STRINGBUF_H
 #include "stringbuf.h"
@@ -21,11 +21,12 @@ stringbuf *sb_alloc(void) {
 	sb->chars = 0;
 #endif
 	sb->data = NULL;
-	return(sb);
+	return (sb);
 }
 
 void sb_free(stringbuf *sb) {
-	if (sb) free(sb->data);
+	if (sb)
+		free(sb->data);
 	free(sb);
 }
 
@@ -39,7 +40,8 @@ void sb_append(stringbuf *sb, const char *str) {
 }
 
 void sb_append_len(stringbuf *sb, const char *str, int len) {
-	if (sb->remaining < len + 1) sb_realloc(sb, sb->last + len + 1 + SB_INCREMENT);
+	if (sb->remaining < len + 1)
+		sb_realloc(sb, sb->last + len + 1 + SB_INCREMENT);
 	memcpy(sb->data + sb->last, str, len);
 	sb->data[sb->last + len] = 0;
 	sb->last += len;
@@ -50,7 +52,8 @@ void sb_append_len(stringbuf *sb, const char *str, int len) {
 }
 
 char *sb_to_string(stringbuf *sb) {
-	if (sb->data == NULL) return strdup("");
+	if (sb->data == NULL)
+		return strdup("");
 	else {
 		char *pt = sb->data;
 		free(sb);
@@ -60,7 +63,8 @@ char *sb_to_string(stringbuf *sb) {
 
 static void sb_insert_space(stringbuf *sb, int pos, int len) {
 	assert(pos <= sb->last);
-	if (sb->remaining < len) sb_realloc(sb, sb->last + len + SB_INCREMENT);
+	if (sb->remaining < len)
+		sb_realloc(sb, sb->last + len + SB_INCREMENT);
 	memmove(sb->data + pos + len, sb->data + pos, sb->last - pos);
 	sb->last += len;
 	sb->remaining -= len;
@@ -80,7 +84,8 @@ static void sb_delete_space(stringbuf *sb, int pos, int len) {
 }
 
 void sb_insert(stringbuf *sb, int index, const char *str) {
-	if (index >= sb->last) sb_append(sb, str);
+	if (index >= sb->last)
+		sb_append(sb, str);
 	else {
 		int len = strlen(str);
 
@@ -95,7 +100,8 @@ void sb_insert(stringbuf *sb, int index, const char *str) {
 void sb_delete(stringbuf *sb, int index, int len) {
 	if (index < sb->last) {
 		char *pos = sb->data + index;
-		if (len < 0) len = sb->last;
+		if (len < 0)
+			len = sb->last;
 
 		sb_delete_space(sb, pos - sb->data, len);
 	}
