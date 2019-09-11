@@ -32,7 +32,7 @@ static void repl() {
 }
 
 static void runFile(const char *path) {
-    char *source = readFile(path);
+    char* source = readFile(path);
     InterpretResult result = interpret(source);
     free(source);
 
