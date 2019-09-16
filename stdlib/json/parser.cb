@@ -1,0 +1,27 @@
+// hello
+
+class Json {
+	// help meeeeeeee
+}
+
+fun hello() {
+	println(1 == 1);
+	println(1 + 1);
+	println(1 >= 1);
+	println(1 > 1);
+	println(1 <= 1);
+	println(1 < 1);
+	println(1 / 1);
+	println(1 * 1);
+	println(1 % 1);
+	println(1 - 1);
+	println(1 != 1);
+	println(!true);
+	println(!false);
+	println(true && true);
+	println(true || false);
+	println(1++);
+	println(1--);
+	
+	return nil;
+}

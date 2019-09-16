@@ -211,15 +211,29 @@ static Value powNative(int argCount, Value *args) {
 	return NUMBER_VAL(pow(a, b));
 }
 
+static Value lenNative(int argCount, Value* args) {
+	if (argCount != 1) {
+        runtimeError("len() takes exactly 1 argument (%d given).", argCount);
+        return NIL_VAL;
+    }
+
+    if (IS_STRING(args[0])) return NUMBER_VAL(AS_STRING(args[0])->length);
+    else if (IS_LIST(args[0])) return NUMBER_VAL(AS_LIST(args[0])->values.count);
+    else if (IS_DICT(args[0])) return NUMBER_VAL(AS_DICT(args[0])->count);
+
+    runtimeError("Unsupported type passed to len()", argCount);
+    return NIL_VAL;
+}
+
 void defineAllNatives() {
 	char *nativeNames[] = {
 		"clock", "time", "input", "random", "ceil",
-		"floor", "bool", "num",   "str",	"pow",
+		"floor", "bool", "num",   "str",	"pow", "len"
 	};
 
 	NativeFn nativeFunctions[] = {
 		clockNative, timeNative, inputNative, randomNative, ceilNative,
-		floorNative, boolNative, numNative,   strNative,	powNative,
+		floorNative, boolNative, numNative,   strNative,	powNative, lenNative,
 	};
 
 	char *nativeVoidNames[] = {

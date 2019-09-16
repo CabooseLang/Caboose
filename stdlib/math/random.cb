@@ -1,0 +1,15 @@
+class Random {
+    static int(min, max) {
+        min = ceil(min);
+        max = floor(max);
+        return floor(random() * (max - min + 1)) + min;
+    }
+
+    static flt(min, max) {
+        return (random() * (max - min + 1)) + min;
+    }
+
+    static choice(lst) {
+        return lst[Random.int(0, len(list) - 1)];
+    }
+}
