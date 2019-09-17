@@ -44,8 +44,7 @@ static bool insertListItem(int argCount) {
 	if (list->values.capacity < list->values.count + 1) {
 		int oldCapacity = list->values.capacity;
 		list->values.capacity = GROW_CAPACITY(oldCapacity);
-		list->values.values = GROW_ARRAY(list->values.values, Value,
-										 oldCapacity, list->values.capacity);
+		list->values.values = GROW_ARRAY(list->values.values, Value, oldCapacity, list->values.capacity);
 	}
 
 	list->values.count++;
@@ -61,8 +60,7 @@ static bool insertListItem(int argCount) {
 
 static bool popListItem(int argCount) {
 	if (argCount < 1 || argCount > 2) {
-		runtimeError("pop() takes either 1 or 2 arguments (%d  given)",
-					 argCount);
+		runtimeError("pop() takes either 1 or 2 arguments (%d  given)", argCount);
 		return false;
 	}
 
@@ -103,8 +101,7 @@ static bool popListItem(int argCount) {
 		}
 
 		if (index < 0 || index > list->values.count) {
-			runtimeError(
-				"Index passed to pop() is out of bounds for the list given");
+			runtimeError("Index passed to pop() is out of bounds for the list given");
 			return false;
 		}
 

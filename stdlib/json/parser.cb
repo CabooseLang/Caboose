@@ -1,27 +1,13 @@
-// hello
+var JSON_COMMA = ','
+var JSON_COLON = ':'
+var JSON_LEFTBRACKET = '['
+var JSON_RIGHTBRACKET = ']'
+var JSON_LEFTBRACE = '{'
+var JSON_RIGHTBRACE = '}'
+var JSON_QUOTE = '"'
 
 class Json {
-	// help meeeeeeee
-}
+	static parse(source) {
 
-fun hello() {
-	println(1 == 1);
-	println(1 + 1);
-	println(1 >= 1);
-	println(1 > 1);
-	println(1 <= 1);
-	println(1 < 1);
-	println(1 / 1);
-	println(1 * 1);
-	println(1 % 1);
-	println(1 - 1);
-	println(1 != 1);
-	println(!true);
-	println(!false);
-	println(true && true);
-	println(true || false);
-	println(1++);
-	println(1--);
-	
-	return nil;
+	}
 }
