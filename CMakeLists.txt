@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name and version
-project(Caboose VERSION 1.1.0)
+project(Caboose VERSION 1.1.1)
 file(GLOB LIB_SOURCES "src/*.c" "src/**/*.c")
 
 add_executable(caboose ${LIB_SOURCES})
