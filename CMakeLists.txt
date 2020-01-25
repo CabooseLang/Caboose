@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
-project(caboose LANGUAGES C VERSION 2.0.0)
+
+include(cmake/VersionFromGit.cmake)
+version_from_git()
+
+project(caboose LANGUAGES C VERSION ${git_resolved_version})
 
 set(CMAKE_C_STANDARD 11)
 
 file(GLOB lib_source "src/*.c")
 file(GLOB lib_header "src/*.h")
-#file(GLOB linenoise_source_header "src/app/linenoise/*.c" "src/app/linenoise/*.h")
 
 add_library(caboose STATIC ${lib_source})
 add_executable(cb src/app/main.c ${lib_source} ${lib_header})
@@ -13,9 +16,19 @@ target_link_libraries(cb caboose)
 
 file(GLOB lib_source)
 
-set_target_properties(caboose PROPERTIES PUBLIC_HEADER "chunk.h;debug.h;value.h;memory.h")
-INSTALL(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose ARCHIVE DESTINATION lib/caboose)
+set_target_properties(caboose PROPERTIES PUBLIC_HEADER "src/chunk.h;src/debug.h;src/value.h;src/memory.h")
+install(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose ARCHIVE DESTINATION lib/caboose)
+install(TARGETS cb DESTINATION bin)
 
 enable_testing()
 
 add_test(fun ./cb test_fun.cb)
+
+# Packaging
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_VERSION_MAJOR "${caboose_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${caboose_VERSION_MINOR}")
+set(CPACK_PACKAGE_CONTACT "Caboose Maintainers")
+include(CPack)
+
