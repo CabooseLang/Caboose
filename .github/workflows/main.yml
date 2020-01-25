@@ -11,7 +11,7 @@ jobs:
         uses: CabooseLang/github-actions/cmake-configure@master
         with:
           build_dir: build
-          source_dir: ./
+          source_dir: '.'
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
         with:
@@ -25,7 +25,7 @@ jobs:
         uses: CabooseLang/github-actions/cmake-configure@master
         with:
           build_dir: build
-          source_dir: ./
+          source_dir: '.'
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
         with:
