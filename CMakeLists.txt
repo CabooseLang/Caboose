@@ -7,6 +7,10 @@ file(GLOB lib_source "src/*.c")
 file(GLOB lib_header "src/*.h")
 
 add_library(caboose SHARED ${lib_source})
+add_executable(cb src/app/main.c ${lib_source} ${lib_header})
+target_link_libraries(cb caboose)
 
-install(TARGETS caboose DESTINATION lib)
-install(FILES ${lib_header} DESTINATION include/caboose)
+file(GLOB lib_source)
+
+set_target_properties(caboose PROPERTIES PUBLIC_HEADER "chunk.h;debug.h;value.h;memory.h")
+INSTALL(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose)
