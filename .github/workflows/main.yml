@@ -11,6 +11,7 @@ jobs:
         uses: CabooseLang/github-actions/cmake-configure@master
         with:
           build_dir: build
+          source_dir: ./
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
         with:
@@ -21,9 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Configure
-        run: |
-          mkdir build 
-          cd build 
-          cmake ..
+        uses: CabooseLang/github-actions/cmake-configure@master
+        with:
+          build_dir: build
+          source_dir: ./
       - name: Build
-        run: cmake --build build
+        uses: CabooseLang/github-actions/cmake-build@master
+        with:
+          build_dir: build
