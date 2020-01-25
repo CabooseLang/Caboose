@@ -10,12 +10,12 @@ jobs:
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
         with:
-          build_dir: build
-          source_dir: '.'
+          build_dir: $GITHUB_WORKSPACE/build
+          source_dir: $GITHUB_WORKSPACE
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
         with:
-          build_dir: build
+          build_dir: $GITHUB_WORKSPACE/build
 
   build-windows:
     runs-on: windows-latest
@@ -24,9 +24,9 @@ jobs:
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
         with:
-          build_dir: build
-          source_dir: '.'
+          build_dir: $GITHUB_WORKSPACE/build
+          source_dir: $GITHUB_WORKSPACE
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
         with:
-          build_dir: build
+          build_dir: $GITHUB_WORKSPACE/build
