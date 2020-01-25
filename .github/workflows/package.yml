@@ -6,9 +6,11 @@ on:
       - '*'
 
 jobs:
-  build:
-    name: Build
+  build-ubuntu:
+    name: Build on Ubuntu
     runs-on: ubuntu-latest
+    env:
+      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v1

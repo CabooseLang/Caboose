@@ -3,29 +3,25 @@ on: [push]
 
 jobs:
   build-ubuntu:
+    name: Build on Ubuntu
     runs-on: ubuntu-latest
+    env:
+      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v1
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
-        with:
-          build_dir: build
-          source_dir: '.'
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
-        with:
-          build_dir: build
 
   build-windows:
+    name: Build on Windows
     runs-on: windows-latest
+    env:
+      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v1
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
-        with:
-          build_dir: build
-          source_dir: '.'
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
-        with:
-          build_dir: build
