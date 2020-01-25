@@ -5,6 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 file(GLOB lib_source "src/*.c")
 file(GLOB lib_header "src/*.h")
+#file(GLOB linenoise_source_header "src/app/linenoise/*.c" "src/app/linenoise/*.h")
 
 add_library(caboose SHARED ${lib_source})
 add_executable(cb src/app/main.c ${lib_source} ${lib_header})

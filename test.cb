@@ -1,3 +1,2 @@
-var hello = "world";
-
-print hello;
+fun hello(name) { print "hello, " + name; }
+hello("world");
