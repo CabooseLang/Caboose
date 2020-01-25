@@ -14,14 +14,18 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v1
+
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
+
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
+
       - name: Package
         uses: CabooseLang/github-actions/cmake-package@master
         with:
-          package_type: deb;rpm
+          package_type: deb;rpm;nsis
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -32,6 +36,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: true
           prerelease: false
+
       - name: Upload Debian Package
         id: upload_debian_package
         uses: actions/upload-release-asset@v1.0.1
@@ -39,8 +44,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/caboose-${{ github.ref }}-Linux.deb
-          asset_name: caboose-${{ github.ref }}-Linux.deb
+          asset_path: ./build/Caboose-${{ github.ref }}.deb
+          asset_name: Caboose-${{ github.ref }}.deb
+          asset_content_type: application/octet-stream
+
       - name: Upload RPM Package
         id: upload_rpm_package
         uses: actions/upload-release-asset@v1.0.1
@@ -48,5 +55,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/caboose-${{ github.ref }}-Linux.rpm
-          asset_name: caboose-${{ github.ref }}-Linux.rpm
+          asset_path: ./build/Caboose-${{ github.ref }}.rpm
+          asset_name: Caboose-${{ github.ref }}.rpm
+          asset_content_type: application/octet-stream
+
+      - name: Upload NSIS Package
+        id: upload_nsis_package
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/Caboose-${{ github.ref }}.exe
+          asset_name: Caboose-${{ github.ref }}.exe
+          asset_content_type: application/octet-stream
