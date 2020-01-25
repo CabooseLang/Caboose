@@ -1,0 +1,8 @@
+fun makeClosure() {
+  fun closure(value) {
+    print value;
+  }
+  return closure;
+}
+
+makeClosure()("banana");

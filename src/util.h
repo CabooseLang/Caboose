@@ -3,9 +3,12 @@
 
 #include "common.h"
 
-char* readFile(const char* path);
+char*
+readFile(const char* path);
 
-bool isAlpha(char c);
-bool isDigit(char c);
+bool
+isAlpha(char c);
+bool
+isDigit(char c);
 
 #endif

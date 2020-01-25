@@ -1,10 +1,9 @@
-﻿---
-AlignEscapedNewlines: Right
-AlignOperands: true
-AlignTrailingComments: true
-IndentCaseLabels: true
+---
 Language: Cpp
-TabWidth: 4
-UseTab: Always
-
+BasedOnStyle: Mozilla
+IndentCaseLabels: true
+IndentWidth: 4
+PointerAlignment: Left
+SortIncludes: true
+BreakBeforeBraces: Attach
 ...
