@@ -14,7 +14,7 @@ target_link_libraries(cb caboose)
 file(GLOB lib_source)
 
 set_target_properties(caboose PROPERTIES PUBLIC_HEADER "chunk.h;debug.h;value.h;memory.h")
-INSTALL(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose)
+INSTALL(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose ARCHIVE DESTINATION lib/caboose)
 
 enable_testing()
 
