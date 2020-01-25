@@ -35,6 +35,13 @@ typedef struct {
 
     CallFrame frames[FRAMES_MAX];
     int frameCount;
+
+    int grayCount;
+    int grayCapacity;
+    Obj** grayStack;
+
+    size_t bytesAllocated;
+    size_t nextGC;
 } VM;
 
 /**
@@ -54,14 +61,20 @@ extern VM vm;
 
 void
 initVM();
+
 void
 freeVM();
+
 InterpretResult
 interpret(const char* source);
+
 void
 push(Value value);
+
 Value
 pop();
-// void defineNative(const char* name, NativeFn function);
+
+void
+defineNative(const char* name, NativeFn function);
 
 #endif

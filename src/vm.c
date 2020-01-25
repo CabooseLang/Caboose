@@ -52,11 +52,13 @@ runtimeError(const char* format, ...) {
     resetStack();
 }
 
-static void
+void
 defineNative(const char* name, NativeFn function) {
     push(OBJ_VAL(copyString(name, (int)strlen(name))));
     push(OBJ_VAL(newNative(function)));
     tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+    pop();
+    pop();
 }
 
 static Value
@@ -71,6 +73,13 @@ void
 initVM() {
     resetStack();
     vm.objects = NULL;
+
+    vm.bytesAllocated = 0;
+    vm.nextGC = 1024 * 1024;
+
+    vm.grayCount = 0;
+    vm.grayCapacity = 0;
+    vm.grayStack = NULL;
 
     initTable(&vm.globals);
     initTable(&vm.strings);
@@ -177,8 +186,8 @@ closeUpvalues(Value* last) {
 
 static void
 concatenate() {
-    ObjString* b = AS_STRING(pop());
-    ObjString* a = AS_STRING(pop());
+    ObjString* b = AS_STRING(peek(0));
+    ObjString* a = AS_STRING(peek(1));
 
     int length = a->length + b->length;
     char* chars = ALLOCATE(char, length + 1);
@@ -187,6 +196,9 @@ concatenate() {
     chars[length] = '\0';
 
     ObjString* result = takeString(chars, length);
+    pop();
+    pop();
+
     push(OBJ_VAL(result));
 }
 
@@ -197,10 +209,10 @@ concatenate() {
 static InterpretResult
 run() {
     CallFrame* frame = &vm.frames[vm.frameCount - 1];
-    register uint8_t* ip = frame->ip;
 
-#define READ_BYTE() (*ip++)
-#define READ_SHORT() (ip += 2, (uint16_t)((ip[-2] << 8) | ip[-1]))
+#define READ_BYTE() (*frame->ip++)
+#define READ_SHORT()                                                           \
+    (frame->ip += 2, (uint16_t)((frame->ip[-2] << 8) | frame->ip[-1]))
 #define READ_CONSTANT()                                                        \
     (frame->closure->function->chunk.constants.values[READ_BYTE()])
 #define READ_STRING() AS_STRING(READ_CONSTANT())
@@ -368,11 +380,9 @@ run() {
             }
             case OP_CALL: {
                 int argCount = READ_BYTE();
-                frame->ip = ip;
                 if (!callValue(peek(argCount), argCount))
                     return INTERPRET_RUNTIME_ERROR;
                 frame = &vm.frames[vm.frameCount - 1];
-                ip = frame->ip;
                 break;
             }
             case OP_CLOSURE: {

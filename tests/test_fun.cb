@@ -1,0 +1,5 @@
+fun example(name) {
+    return name + "!";
+}
+
+print example("Rail");
