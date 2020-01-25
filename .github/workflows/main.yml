@@ -6,23 +6,24 @@ jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Configure
-      run: |
-        mkdir build 
-        cd build 
-        cmake ..
-    - name: Build
-      run: cmake --build build
+      - uses: actions/checkout@v1
+      - name: Configure
+        uses: CabooseLang/github-actions/cmake-configure@master
+        with:
+          build_dir: build
+      - name: Build
+        uses: CabooseLang/github-actions/cmake-build@master
+        with:
+          build_dir: build
 
   build-windows:
-    runs-on: windows-latest   
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Configure
-      run: |
-        mkdir build 
-        cd build 
-        cmake ..
-    - name: Build
-      run: cmake --build build
+      - uses: actions/checkout@v1
+      - name: Configure
+        run: |
+          mkdir build 
+          cd build 
+          cmake ..
+      - name: Build
+        run: cmake --build build
