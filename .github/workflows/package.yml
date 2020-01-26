@@ -12,6 +12,9 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
+      - name: Install NSIS
+        uses: CabooseLang/github-actions/install-nsis@master
+
       - name: Checkout Repo
         uses: actions/checkout@v1
 
