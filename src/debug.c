@@ -81,8 +81,6 @@ disassembleInstruction(Chunk* chunk, int offset) {
             return simpleInstruction("OP_GREATER", offset);
         case OP_LESS:
             return simpleInstruction("OP_LESS", offset);
-        case OP_PRINT:
-            return simpleInstruction("OP_PRINT", offset);
         case OP_POP:
             return simpleInstruction("OP_POP", offset);
         case OP_DEFINE_GLOBAL:
@@ -127,6 +125,8 @@ disassembleInstruction(Chunk* chunk, int offset) {
             return byteInstruction("OP_SET_UPVALUE", chunk, offset);
         case OP_CLOSE_UPVALUE:
             return simpleInstruction("OP_CLOSE_UPVALUE", offset);
+        case OP_IMPORT:
+            return simpleInstruction("OP_IMPORT", offset);
         default:
             printf("Unknown opcode %d\n", instruction);
             return offset + 1;

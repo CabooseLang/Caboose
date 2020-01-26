@@ -593,17 +593,17 @@ ParseRule rules[] = {
     { NULL, NULL, PREC_NONE },         // TOKEN_FOR
     { NULL, NULL, PREC_NONE },         // TOKEN_FUN
     { NULL, NULL, PREC_NONE },         // TOKEN_IF
-    { literal, NULL, PREC_NONE },      // TOKEN_NIL
-    { NULL, or_, PREC_OR },            // TOKEN_OR
-    { NULL, NULL, PREC_NONE },         // TOKEN_PRINT
-    { NULL, NULL, PREC_NONE },         // TOKEN_RETURN
-    { NULL, NULL, PREC_NONE },         // TOKEN_SUPER
-    { NULL, NULL, PREC_NONE },         // TOKEN_THIS
-    { literal, NULL, PREC_NONE },      // TOKEN_TRUE
-    { NULL, NULL, PREC_NONE },         // TOKEN_VAR
-    { NULL, NULL, PREC_NONE },         // TOKEN_WHILE
-    { NULL, NULL, PREC_NONE },         // TOKEN_ERROR
-    { NULL, NULL, PREC_NONE },         // TOKEN_EOF
+    { literal, NULL, PREC_NONE }, // TOKEN_NIL
+    { NULL, or_, PREC_OR }, // TOKEN_OR
+    { NULL, NULL, PREC_NONE }, // TOKEN_RETURN
+    { NULL, NULL, PREC_NONE }, // TOKEN_SUPER
+    { NULL, NULL, PREC_NONE }, // TOKEN_THIS
+    { literal, NULL, PREC_NONE }, // TOKEN_TRUE
+    { NULL, NULL, PREC_NONE }, // TOKEN_VAR
+    { NULL, NULL, PREC_NONE }, // TOKEN_WHILE
+    { NULL, NULL, PREC_NONE }, // TOKEN_IMPORT
+    { NULL, NULL, PREC_NONE }, // TOKEN_ERROR
+    { NULL, NULL, PREC_NONE }, // TOKEN_EOF
 };
 
 static void
@@ -776,13 +776,6 @@ ifStatement() {
 }
 
 static void
-printStatement() {
-    expression();
-    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
-    emitByte(OP_PRINT);
-}
-
-static void
 returnStatement() {
     if (current->type == TYPE_SCRIPT)
         error("Cannot return from top-level code.");
@@ -794,6 +787,16 @@ returnStatement() {
         consume(TOKEN_SEMICOLON, "Expect ';' after return value.");
         emitByte(OP_RETURN);
     }
+}
+
+static void
+importStatement() {
+    consume(TOKEN_STRING, "Expect string after import.");
+    emitConstant(OBJ_VAL(
+      copyString(parser.previous.start + 1, parser.previous.length - 2)));
+    consume(TOKEN_SEMICOLON, "Expect ';' after import.");
+
+    emitByte(OP_IMPORT);
 }
 
 static void
@@ -830,7 +833,7 @@ synchronize() {
             case TOKEN_FOR:
             case TOKEN_IF:
             case TOKEN_WHILE:
-            case TOKEN_PRINT:
+            case TOKEN_IMPORT:
             case TOKEN_RETURN:
                 return;
 
@@ -859,14 +862,14 @@ declaration() {
 
 static void
 statement() {
-    if (match(TOKEN_PRINT))
-        printStatement();
-    else if (match(TOKEN_FOR))
+    if (match(TOKEN_FOR))
         forStatement();
     else if (match(TOKEN_IF))
         ifStatement();
     else if (match(TOKEN_RETURN))
         returnStatement();
+    else if (match(TOKEN_IMPORT))
+        importStatement();
     else if (match(TOKEN_WHILE))
         whileStatement();
     else if (match(TOKEN_LEFT_BRACE)) {

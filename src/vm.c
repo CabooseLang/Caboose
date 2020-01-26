@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -8,6 +9,7 @@
 #include "debug.h"
 #include "memory.h"
 #include "object.h"
+#include "util.h"
 #include "value.h"
 #include "vm.h"
 
@@ -61,16 +63,41 @@ defineNative(const char* name, NativeFn function) {
     pop();
 }
 
+void
+defineNativeVoid(const char *name, NativeFnVoid function) {
+    push(OBJ_VAL(copyString(name, (int) strlen(name))));
+    push(OBJ_VAL(newNativeVoid(function)));
+    tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
+    pop();
+    pop();
+}
+
 static Value
 clockNative(int argCount, Value* args) {
     return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+}
+
+static bool
+printNative(int argCount, Value* args) {
+    if (argCount == 0) {
+        printf("\n");
+        return true;
+    }
+
+    for (int i = 0; i < argCount; ++i) {
+        Value value = args[i];
+        printValue(value);
+        printf("\n");
+    }
+
+    return true;
 }
 
 /**
  * Initialize the virtual machine.
  */
 void
-initVM() {
+initVM(const char* scriptName) {
     resetStack();
     vm.objects = NULL;
 
@@ -81,10 +108,14 @@ initVM() {
     vm.grayCapacity = 0;
     vm.grayStack = NULL;
 
+    vm.scriptName = scriptName;
+    vm.currentScriptName = scriptName;
+
     initTable(&vm.globals);
     initTable(&vm.strings);
 
     defineNative("clock", clockNative);
+    defineNativeVoid("print", printNative);
 }
 
 /**
@@ -139,6 +170,15 @@ callValue(Value callee, int argCount) {
 
                 vm.stackTop -= argCount - 1;
                 push(result);
+                return true;
+            }
+            case OBJ_NATIVE_VOID: {
+                NativeFnVoid native = AS_NATIVE_VOID(callee);
+                if (!native(argCount, vm.stackTop - argCount))
+                    return false;
+
+                vm.stackTop -= argCount - 1;
+                push(NIL_VAL);
                 return true;
             }
             default:
@@ -416,6 +456,23 @@ run() {
                 closeUpvalues(vm.stackTop - 1);
                 pop();
                 break;
+            case OP_IMPORT: {
+                ObjString* fileName = AS_STRING(pop());
+                char* s = readFile(fileName->chars);
+                vm.currentScriptName = fileName->chars;
+
+                ObjFunction* function = compile(s);
+                if (function == NULL)
+                    return INTERPRET_COMPILE_ERROR;
+                push(OBJ_VAL(function));
+                ObjClosure* closure = newClosure(function);
+                pop();
+
+                call(closure, 0);
+                frame = &vm.frames[vm.frameCount - 1];
+
+                free(s);
+            }
         }
 #undef READ_CONSTANT
 #undef READ_BYTE

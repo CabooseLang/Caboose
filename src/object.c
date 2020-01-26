@@ -148,3 +148,9 @@ newUpvalue(Value* slot) {
     upvalue->next = NULL;
     return upvalue;
 }
+
+ObjNativeVoid *newNativeVoid(NativeFnVoid function) {
+    ObjNativeVoid *native = ALLOCATE_OBJ(ObjNativeVoid, OBJ_NATIVE_VOID);
+    native->function = function;
+    return native;
+}

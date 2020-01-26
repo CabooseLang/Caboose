@@ -36,6 +36,9 @@ typedef struct {
     CallFrame frames[FRAMES_MAX];
     int frameCount;
 
+    const char* scriptName;
+    const char* currentScriptName;
+
     int grayCount;
     int grayCapacity;
     Obj** grayStack;
@@ -60,7 +63,7 @@ typedef enum {
 extern VM vm;
 
 void
-initVM();
+initVM(const char* scriptName);
 
 void
 freeVM();
