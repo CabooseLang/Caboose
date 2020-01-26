@@ -337,11 +337,6 @@ run() {
                 frame = &vm.frames[vm.frameCount - 1];
                 break;
             }
-            case OP_PRINT: {
-                printValue(pop());
-                printf("\n");
-                break;
-            }
             case OP_DEFINE_GLOBAL: {
                 ObjString* name = READ_STRING();
                 tableSet(&vm.globals, name, peek(0));
