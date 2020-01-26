@@ -80,4 +80,7 @@ pop();
 void
 defineNative(const char* name, NativeFn function);
 
+void
+defineNativeVoid(const char *name, NativeFnVoid function);
+
 #endif

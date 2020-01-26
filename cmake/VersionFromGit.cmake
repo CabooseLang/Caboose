@@ -1,8 +1,6 @@
-include(CMakeParseArguments)
-
 function(version_from_git)
     execute_process(
-            COMMAND git rev-parse HEAD
+            COMMAND git rev-list --tags --max-count=1
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             RESULT_VARIABLE git_result
             OUTPUT_VARIABLE git_rev
@@ -12,7 +10,7 @@ function(version_from_git)
     )
 
     execute_process(
-            COMMAND git tag -l --points-at ${git_rev}
+            COMMAND git describe --tags ${git_rev}
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             RESULT_VARIABLE git_result
             OUTPUT_VARIABLE git_rev_tag
@@ -25,8 +23,8 @@ function(version_from_git)
         message(FATAL_ERROR "Failed to execute Git: ${git_error}")
     endif()
 
-    if(NOT $ENV{GIT_TAG} STREQUAL "")
-        set(git_rev_tag, $ENV{GIT_TAG})
+    if(NOT "$ENV{GIT_TAG}" STREQUAL "")
+        set(git_rev_tag, "$ENV{GIT_TAG}")
     endif()
 
     set(git_resolved_version ${git_rev_tag} PARENT_SCOPE)
