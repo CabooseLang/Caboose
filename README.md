@@ -2,6 +2,8 @@
 
 > Caboose is a simple, dynamically typed, bytecode-based interpreted language built on top of a powerful VM.
 
+[![asciicast](https://asciinema.org/a/295998.svg)](https://asciinema.org/a/295998)
+
 Caboose aims to be a simple and easy to learn language while still being powerful enough for everyday use. It can compile anywhere C can run so give it a go!
 
 ## Building
