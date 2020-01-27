@@ -8,7 +8,11 @@ readFile(const char* path);
 
 bool
 isAlpha(char c);
+
 bool
 isDigit(char c);
+
+char*
+getAddress(void* pointer);
 
 #endif

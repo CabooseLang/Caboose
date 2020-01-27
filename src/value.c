@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "memory.h"
@@ -33,20 +34,7 @@ freeValueArray(ValueArray* array) {
 
 void
 printValue(Value value) {
-    switch (value.type) {
-        case VAL_BOOL:
-            printf(AS_BOOL(value) ? "true" : "false");
-            break;
-        case VAL_NIL:
-            printf("nil");
-            break;
-        case VAL_NUMBER:
-            printf("%g", AS_NUMBER(value));
-            break;
-        case VAL_OBJ:
-            printObject(value);
-            break;
-    }
+    printf("%s", valueToString(value));
 }
 
 bool
@@ -69,4 +57,29 @@ valuesEqual(Value a, Value b) {
         case VAL_OBJ:
             return AS_OBJ(a) == AS_OBJ(b);
     }
+}
+
+char*
+valueToString(Value value) {
+    if (IS_BOOL(value)) {
+        char* str = AS_BOOL(value) ? "true" : "false";
+        char* boolString = malloc(sizeof(char) * (strlen(str) + 1));
+        snprintf(boolString, strlen(str) + 1, "%s", str);
+        return boolString;
+    } else if (IS_NIL(value)) {
+        char* nilString = malloc(sizeof(char) * 4);
+        snprintf(nilString, 4, "%s", "nil");
+        return nilString;
+    } else if (IS_NUMBER(value)) {
+        double number = AS_NUMBER(value);
+        int numberStringLength = snprintf(NULL, 0, "%.15g", number) + 1;
+        char* numberString = malloc(sizeof(char) * numberStringLength);
+        snprintf(numberString, numberStringLength, "%.15g", number);
+        return numberString;
+    } else if (IS_OBJ(value))
+        return objectToString(value);
+
+    char* unknown = malloc(sizeof(char) * 8);
+    snprintf(unknown, 7, "%s", "unknown");
+    return unknown;
 }

@@ -30,7 +30,7 @@ resetStack() {
  * @param format The format of the error message.
  * @param ... The arguments to the format string.
  */
-static void
+void
 runtimeError(const char* format, ...) {
     va_list args;
     va_start(args, format);
@@ -64,8 +64,8 @@ defineNative(const char* name, NativeFn function) {
 }
 
 void
-defineNativeVoid(const char *name, NativeFnVoid function) {
-    push(OBJ_VAL(copyString(name, (int) strlen(name))));
+defineNativeVoid(const char* name, NativeFnVoid function) {
+    push(OBJ_VAL(copyString(name, (int)strlen(name))));
     push(OBJ_VAL(newNativeVoid(function)));
     tableSet(&vm.globals, AS_STRING(vm.stack[0]), vm.stack[1]);
     pop();

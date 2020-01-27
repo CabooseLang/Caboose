@@ -593,17 +593,17 @@ ParseRule rules[] = {
     { NULL, NULL, PREC_NONE },         // TOKEN_FOR
     { NULL, NULL, PREC_NONE },         // TOKEN_FUN
     { NULL, NULL, PREC_NONE },         // TOKEN_IF
-    { literal, NULL, PREC_NONE }, // TOKEN_NIL
-    { NULL, or_, PREC_OR }, // TOKEN_OR
-    { NULL, NULL, PREC_NONE }, // TOKEN_RETURN
-    { NULL, NULL, PREC_NONE }, // TOKEN_SUPER
-    { NULL, NULL, PREC_NONE }, // TOKEN_THIS
-    { literal, NULL, PREC_NONE }, // TOKEN_TRUE
-    { NULL, NULL, PREC_NONE }, // TOKEN_VAR
-    { NULL, NULL, PREC_NONE }, // TOKEN_WHILE
-    { NULL, NULL, PREC_NONE }, // TOKEN_IMPORT
-    { NULL, NULL, PREC_NONE }, // TOKEN_ERROR
-    { NULL, NULL, PREC_NONE }, // TOKEN_EOF
+    { literal, NULL, PREC_NONE },      // TOKEN_NIL
+    { NULL, or_, PREC_OR },            // TOKEN_OR
+    { NULL, NULL, PREC_NONE },         // TOKEN_RETURN
+    { NULL, NULL, PREC_NONE },         // TOKEN_SUPER
+    { NULL, NULL, PREC_NONE },         // TOKEN_THIS
+    { literal, NULL, PREC_NONE },      // TOKEN_TRUE
+    { NULL, NULL, PREC_NONE },         // TOKEN_VAR
+    { NULL, NULL, PREC_NONE },         // TOKEN_WHILE
+    { NULL, NULL, PREC_NONE },         // TOKEN_IMPORT
+    { NULL, NULL, PREC_NONE },         // TOKEN_ERROR
+    { NULL, NULL, PREC_NONE },         // TOKEN_EOF
 };
 
 static void

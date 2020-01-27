@@ -106,4 +106,7 @@ newNativeVoid(NativeFnVoid function);
 void
 printObject(Value value);
 
+char*
+objectToString(Value value);
+
 #endif

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "memory.h"
@@ -91,23 +92,7 @@ printFunction(ObjFunction* function) {
 
 void
 printObject(Value value) {
-    switch (OBJ_TYPE(value)) {
-        case OBJ_CLOSURE:
-            printFunction(AS_CLOSURE(value)->function);
-            break;
-        case OBJ_STRING:
-            printf("%s", AS_CSTRING(value));
-            break;
-        case OBJ_FUNCTION:
-            printFunction(AS_FUNCTION(value));
-            break;
-        case OBJ_NATIVE:
-            printf("<native fn>");
-            break;
-        case OBJ_UPVALUE:
-            printf("upvalue");
-            break;
-    }
+    printf(objectToString(value));
 }
 
 ObjString*
@@ -149,8 +134,60 @@ newUpvalue(Value* slot) {
     return upvalue;
 }
 
-ObjNativeVoid *newNativeVoid(NativeFnVoid function) {
-    ObjNativeVoid *native = ALLOCATE_OBJ(ObjNativeVoid, OBJ_NATIVE_VOID);
+ObjNativeVoid*
+newNativeVoid(NativeFnVoid function) {
+    ObjNativeVoid* native = ALLOCATE_OBJ(ObjNativeVoid, OBJ_NATIVE_VOID);
     native->function = function;
     return native;
+}
+
+char*
+objectToString(Value value) {
+    switch (OBJ_TYPE(value)) {
+        case OBJ_CLOSURE: {
+            ObjClosure* closure = AS_CLOSURE(value);
+            char* closureString =
+              malloc(sizeof(char) * (closure->function->name->length + 6));
+            snprintf(closureString,
+                     closure->function->name->length + 6,
+                     "<fn %s>",
+                     closure->function->name->chars);
+            return closureString;
+        }
+
+        case OBJ_FUNCTION: {
+            ObjFunction* function = AS_FUNCTION(value);
+            char* functionString =
+              malloc(sizeof(char) * (function->name->length + 6));
+            snprintf(functionString,
+                     function->name->length + 6,
+                     "<fn %s>",
+                     function->name->chars);
+            return functionString;
+        }
+
+        case OBJ_NATIVE_VOID:
+        case OBJ_NATIVE: {
+            char* nativeString = malloc(sizeof(char) * 12);
+            snprintf(nativeString, 12, "%s", "<native fn>");
+            return nativeString;
+        }
+
+        case OBJ_STRING: {
+            ObjString* stringObj = AS_STRING(value);
+            char* string = malloc(sizeof(char) * stringObj->length + 3);
+            snprintf(string, stringObj->length + 1, "%s", stringObj->chars);
+            return string;
+        }
+
+        case OBJ_UPVALUE: {
+            char* nativeString = malloc(sizeof(char) * 8);
+            snprintf(nativeString, 8, "%s", "upvalue");
+            return nativeString;
+        }
+    }
+
+    char* unknown = malloc(sizeof(char) * 8);
+    snprintf(unknown, 7, "%s", "unknown");
+    return unknown;
 }

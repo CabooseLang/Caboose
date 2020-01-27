@@ -41,3 +41,10 @@ bool
 isAlpha(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
+
+char*
+getAddress(void* pointer) {
+    char addr[64];
+    sprintf(addr, "%p", pointer);
+    return addr;
+}
