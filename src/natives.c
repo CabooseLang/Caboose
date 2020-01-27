@@ -26,9 +26,9 @@ strNative(int argCount, Value* args) {
     }
 
     if (!IS_STRING(args[0])) {
-        char *valueString = valueToString(args[0]);
+        char* valueString = valueToString(args[0]);
 
-        ObjString *string = copyString(valueString, strlen(valueString));
+        ObjString* string = copyString(valueString, strlen(valueString));
         free(valueString);
 
         return OBJ_VAL(string);
@@ -54,26 +54,19 @@ lenNative(int argCount, Value* args) {
         return NIL_VAL;
     }
 
-    if (IS_STRING(args[0])) return NUMBER_VAL(AS_STRING(args[0])->length);
+    if (IS_STRING(args[0]))
+        return NUMBER_VAL(AS_STRING(args[0])->length);
 
     runtimeError("Unsupported type passed to len()");
     return NIL_VAL;
 }
 
 const char* nativeNames[] = {
-    "clock",
-    "time",
-    "str",
-    "bool",
-    "len",
+    "clock", "time", "str", "bool", "len",
 };
 
 NativeFn nativeFunctions[] = {
-    clockNative,
-    timeNative,
-    strNative,
-    boolNative,
-    lenNative,
+    clockNative, timeNative, strNative, boolNative, lenNative,
 };
 
 static bool
@@ -92,7 +85,8 @@ printNative(int argCount, Value* args) {
     return true;
 }
 
-static bool exitNative(int argCount, Value* args) {
+static bool
+exitNative(int argCount, Value* args) {
     if (argCount != 1) {
         runtimeError("input() takes exactly 1 argument (%d given).", argCount);
         return true;
@@ -119,7 +113,11 @@ NativeFnVoid nativeVoidFunctions[] = {
 
 void
 defineAllNatives() {
-    for (uint8_t i = 0; i < sizeof(nativeNames) / sizeof(nativeNames[0]); ++i) defineNative(nativeNames[i], nativeFunctions[i]);
+    for (uint8_t i = 0; i < sizeof(nativeNames) / sizeof(nativeNames[0]); ++i)
+        defineNative(nativeNames[i], nativeFunctions[i]);
 
-    for (uint8_t i = 0; i < sizeof(nativeVoidNames) / sizeof(nativeVoidNames[0]); ++i) defineNativeVoid(nativeVoidNames[i], nativeVoidFunctions[i]);
+    for (uint8_t i = 0;
+         i < sizeof(nativeVoidNames) / sizeof(nativeVoidNames[0]);
+         ++i)
+        defineNativeVoid(nativeVoidNames[i], nativeVoidFunctions[i]);
 }
