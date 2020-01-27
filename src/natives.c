@@ -92,12 +92,29 @@ printNative(int argCount, Value* args) {
     return true;
 }
 
+static bool exitNative(int argCount, Value* args) {
+    if (argCount != 1) {
+        runtimeError("input() takes exactly 1 argument (%d given).", argCount);
+        return true;
+    }
+
+    Value exitCode = args[0];
+    if (!IS_NUMBER(exitCode)) {
+        runtimeError("exit() takes only a number value.");
+        return true;
+    }
+
+    exit((int)AS_NUMBER(exitCode));
+}
+
 const char* nativeVoidNames[] = {
     "print",
+    "exit",
 };
 
 NativeFnVoid nativeVoidFunctions[] = {
     printNative,
+    exitNative,
 };
 
 void

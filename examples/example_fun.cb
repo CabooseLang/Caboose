@@ -1,2 +1,2 @@
-fun hello(name) { print "hello, " + name; }
+fun hello(name) { print("hello, " + name); }
 hello("world");
