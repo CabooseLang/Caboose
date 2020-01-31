@@ -8,7 +8,10 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+      - name: Install clang-format
+        run: sudo apt-get install clang-format
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
       - name: Build

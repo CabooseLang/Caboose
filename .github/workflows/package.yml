@@ -15,6 +15,9 @@ jobs:
       - name: Install NSIS
         uses: CabooseLang/github-actions/install-nsis@master
 
+      - name: Install clang-format
+        run: sudo apt-get install clang-format
+
       - name: Checkout Repo
         uses: actions/checkout@v1
 
@@ -39,8 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.get_version.outputs.VERSIONs }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
           draft: true
           prerelease: false
 
