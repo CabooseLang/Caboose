@@ -1,0 +1,8 @@
+class Hello {}
+print(Hello);
+
+var hello = Hello();
+print(hello);
+
+hello.name = "Caboose";
+print(hello.name);

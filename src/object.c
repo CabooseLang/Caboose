@@ -92,7 +92,7 @@ printFunction(ObjFunction* function) {
 
 void
 printObject(Value value) {
-    printf(objectToString(value));
+    printf("%s", objectToString(value));
 }
 
 ObjString*
@@ -118,6 +118,13 @@ newFunction() {
     return function;
 }
 
+ObjInstance* newInstance(ObjClass* klass) {
+    ObjInstance* instance = ALLOCATE_OBJ(ObjInstance, OBJ_INSTANCE);
+    instance->klass = klass;
+    initTable(&instance->fields);
+    return instance;
+}
+
 ObjNative*
 newNative(NativeFn function) {
     ObjNative* native = ALLOCATE_OBJ(ObjNative, OBJ_NATIVE);
@@ -139,6 +146,12 @@ newNativeVoid(NativeFnVoid function) {
     ObjNativeVoid* native = ALLOCATE_OBJ(ObjNativeVoid, OBJ_NATIVE_VOID);
     native->function = function;
     return native;
+}
+
+ObjClass* newClass(ObjString* name) {
+    ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+    klass->name = name;
+    return klass;
 }
 
 char*
@@ -185,9 +198,23 @@ objectToString(Value value) {
             snprintf(nativeString, 8, "%s", "upvalue");
             return nativeString;
         }
+
+        case OBJ_CLASS: {
+            ObjClass* klass = AS_CLASS(value);
+            char* classString = malloc(sizeof(char) * (klass->name->length + 9));
+            snprintf(classString,klass->name->length + 9,"<class %s>",klass->name->chars);
+            return classString;
+        }
+
+        case OBJ_INSTANCE: {
+            ObjInstance* instance = AS_INSTANCE(value);
+            char* instanceString = malloc(sizeof(char) * (instance->klass->name->length + 10));
+            snprintf(instanceString, instance->klass->name->length + 10, "%s instance", instance->klass->name->chars);
+            return instanceString;
+        }
     }
 
     char* unknown = malloc(sizeof(char) * 8);
-    snprintf(unknown, 7, "%s", "unknown");
+    snprintf(unknown, 8, "%s", "unknown");
     return unknown;
 }
