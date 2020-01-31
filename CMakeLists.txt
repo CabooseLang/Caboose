@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 include(cmake/VersionFromGit.cmake)
-include(cmake/ClangFormat.cmake)
 
 version_from_git()
 project(Caboose LANGUAGES C VERSION ${git_resolved_version})
