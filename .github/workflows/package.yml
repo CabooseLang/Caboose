@@ -15,12 +15,7 @@ jobs:
       - name: Install NSIS
         uses: CabooseLang/github-actions/install-nsis@master
 
-      - name: Install clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-format
-
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v1
 
       - name: Get the version

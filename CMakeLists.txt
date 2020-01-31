@@ -14,10 +14,6 @@ add_library(caboose STATIC ${lib_source})
 add_executable(cb src/app/main.c ${lib_source} ${lib_header})
 target_link_libraries(cb caboose)
 
-if (NOT WIN32)
-    target_clangformat_setup(cb)
-endif ()
-
 set_target_properties(caboose PROPERTIES PUBLIC_HEADER "src/chunk.h;src/debug.h;src/value.h;src/memory.h")
 install(TARGETS caboose LIBRARY DESTINATION lib/caboose PUBLIC_HEADER DESTINATION include/caboose ARCHIVE DESTINATION lib/caboose)
 install(TARGETS cb DESTINATION bin)

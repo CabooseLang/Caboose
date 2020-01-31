@@ -8,14 +8,12 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v1
-      - name: Install clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-format
+
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
+
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
 
@@ -25,8 +23,11 @@ jobs:
     env:
       GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+
       - name: Configure
         uses: CabooseLang/github-actions/cmake-configure@master
+
       - name: Build
         uses: CabooseLang/github-actions/cmake-build@master
