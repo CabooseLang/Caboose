@@ -121,9 +121,11 @@ newNative(NativeFn function);
 ObjNativeVoid*
 newNativeVoid(NativeFnVoid function);
 
-ObjClass* newClass(ObjString* name);
+ObjClass*
+newClass(ObjString* name);
 
-ObjInstance* newInstance(ObjClass* klass);
+ObjInstance*
+newInstance(ObjClass* klass);
 
 void
 printObject(Value value);
