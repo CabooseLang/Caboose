@@ -31,6 +31,7 @@ typedef struct {
     Obj* objects;
     Table globals;
     Table strings;
+    ObjString* initString;
     ObjUpvalue* openUpvalues;
 
     CallFrame frames[FRAMES_MAX];

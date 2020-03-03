@@ -1,4 +1,9 @@
-class Hello {}
+class Hello {
+    printName() {
+        print(this.name);
+    }
+}
+
 print(Hello);
 
 var hello = Hello();
@@ -6,3 +11,5 @@ print(hello);
 
 hello.name = "Caboose";
 print(hello.name);
+
+hello.printName();

@@ -153,12 +153,30 @@ ObjClass*
 newClass(ObjString* name) {
     ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
     klass->name = name;
+    initTable(&klass->methods);
     return klass;
 }
+
+ObjBoundMethod* newBoundMethod(Value receiver, ObjClosure* method) {
+    ObjBoundMethod* bound = ALLOCATE_OBJ(ObjBoundMethod, OBJ_BOUND_METHOD);
+    bound->receiver = receiver;
+    bound->method = method;
+    return bound;
+}
+
 
 char*
 objectToString(Value value) {
     switch (OBJ_TYPE(value)) {
+        case OBJ_BOUND_METHOD:
+            ObjFunction* function = AS_FUNCTION(value);
+            char* methodString =
+                    malloc(sizeof(char) * (function->name->length + 10));
+            snprintf(methodString,
+                     function->name->length + 10,
+                     "<method %s>",
+                     function->name->chars);
+            return methodString;
         case OBJ_CLOSURE: {
             ObjClosure* closure = AS_CLOSURE(value);
             char* closureString =
