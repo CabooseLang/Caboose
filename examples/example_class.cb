@@ -12,4 +12,5 @@ print(hello);
 hello.name = "Caboose";
 print(hello.name);
 
+hello.name = "rocks";
 hello.printName();
