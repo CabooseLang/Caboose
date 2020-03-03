@@ -14,3 +14,5 @@ print(hello.name);
 
 hello.name = "rocks";
 hello.printName();
+
+print(hello.printName);

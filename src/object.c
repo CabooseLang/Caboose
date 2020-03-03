@@ -168,15 +168,12 @@ ObjBoundMethod* newBoundMethod(Value receiver, ObjClosure* method) {
 char*
 objectToString(Value value) {
     switch (OBJ_TYPE(value)) {
-        case OBJ_BOUND_METHOD:
-            ObjFunction* function = AS_FUNCTION(value);
-            char* methodString =
-                    malloc(sizeof(char) * (function->name->length + 10));
-            snprintf(methodString,
-                     function->name->length + 10,
-                     "<method %s>",
-                     function->name->chars);
+        case OBJ_BOUND_METHOD: {
+            ObjFunction* function = AS_BOUND_METHOD(value)->method->function;
+            char *methodString = malloc(sizeof(char) * (function->name->length + 10));
+            snprintf(methodString, function->name->length + 10, "<method %s>", function->name->chars);
             return methodString;
+        }
         case OBJ_CLOSURE: {
             ObjClosure* closure = AS_CLOSURE(value);
             char* closureString =
